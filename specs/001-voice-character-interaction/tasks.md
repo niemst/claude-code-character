@@ -91,20 +91,20 @@
 
 ### Implementation for User Story 2
 
-- [ ] T032 [P] [US2] Implement system TTS integration in src/voice/text_to_speech.py using pyttsx3 (cross-platform fallback)
-- [ ] T033 [P] [US2] Implement ElevenLabs TTS integration in src/voice/text_to_speech.py using elevenlabs SDK
-- [ ] T034 [US2] Implement TTS provider selection logic in src/voice/text_to_speech.py (check elevenlabs API key, fallback to system)
-- [ ] T035 [P] [US2] Implement audio playback in src/audio/playback.py using sounddevice or playsound
-- [ ] T036 [P] [US2] Implement audio streaming playback in src/audio/playback.py (start playing while receiving TTS stream)
-- [ ] T037 [US2] Implement response queue in src/voice/voice_session.py (FIFO queue for pending responses)
-- [ ] T038 [US2] Implement playback state management in src/voice/voice_session.py (track isPlaying, currentAudioStream)
-- [ ] T039 [US2] Implement output hook in src/hooks/output_hook.py (intercept Claude Code responses, queue for TTS)
-- [ ] T040 [US2] Implement TTS request handler in src/voice/text_to_speech.py (convert text to audio, return stream)
-- [ ] T041 [US2] Implement playback controller in src/audio/playback.py (play queued responses sequentially)
-- [ ] T042 [US2] Implement interrupt handling in src/audio/playback.py (stop current playback on new push-to-talk press)
-- [ ] T043 [US2] Add mutual exclusion enforcement in src/voice/voice_session.py (ensure isListening and isPlaying not both True)
-- [ ] T044 [US2] Add performance monitoring in src/voice/voice_session.py (track TTS start latency for SC-003 validation)
-- [ ] T045 [US2] Add interrupt response monitoring in src/voice/voice_session.py (track interrupt latency for SC-006 validation)
+- [x] T032 [P] [US2] Implement system TTS integration in src/voice/text_to_speech.py using pyttsx3 (cross-platform fallback)
+- [x] T033 [P] [US2] Implement ElevenLabs TTS integration in src/voice/text_to_speech.py using elevenlabs SDK
+- [x] T034 [US2] Implement TTS provider selection logic in src/voice/text_to_speech.py (check elevenlabs API key, fallback to system)
+- [x] T035 [P] [US2] Implement audio playback in src/audio/playback.py using sounddevice or playsound
+- [x] T036 [P] [US2] Implement audio streaming playback in src/audio/playback.py (start playing while receiving TTS stream)
+- [x] T037 [US2] Implement response queue in src/voice/voice_session.py (FIFO queue for pending responses)
+- [x] T038 [US2] Implement playback state management in src/voice/voice_session.py (track isPlaying, currentAudioStream)
+- [x] T039 [US2] Implement output hook in src/hooks/output_hook.py (intercept Claude Code responses, queue for TTS)
+- [x] T040 [US2] Implement TTS request handler in src/voice/text_to_speech.py (convert text to audio, return stream)
+- [x] T041 [US2] Implement playback controller in src/audio/playback.py (play queued responses sequentially)
+- [x] T042 [US2] Implement interrupt handling in src/audio/playback.py (stop current playback on new push-to-talk press)
+- [x] T043 [US2] Add mutual exclusion enforcement in src/voice/voice_session.py (ensure isListening and isPlaying not both True)
+- [x] T044 [US2] Add performance monitoring in src/voice/voice_session.py (track TTS start latency for SC-003 validation)
+- [x] T045 [US2] Add interrupt response monitoring in src/voice/voice_session.py (track interrupt latency for SC-006 validation)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently - full voice interaction loop functional
 

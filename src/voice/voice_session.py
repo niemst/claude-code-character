@@ -32,6 +32,7 @@ class Statistics:
     average_transcription_time_ms: float = 0.0
     average_playback_start_time_ms: float = 0.0
     interruptions_count: int = 0
+    average_interrupt_latency_ms: float = 0.0
 
     def update_transcription_time(self, duration_ms: int) -> None:
         """Update average transcription time with new measurement."""
@@ -45,9 +46,19 @@ class Statistics:
         total = self.average_playback_start_time_ms * (count - 1)
         self.average_playback_start_time_ms = (total + duration_ms) / count
 
-    def increment_interruptions(self) -> None:
-        """Increment interruption counter."""
+    def increment_interruptions(self, latency_ms: Optional[int] = None) -> None:
+        """
+        Increment interruption counter and update latency.
+
+        Args:
+            latency_ms: Interrupt response latency in milliseconds
+        """
         self.interruptions_count += 1
+
+        if latency_ms is not None:
+            # Update average interrupt latency
+            total = self.average_interrupt_latency_ms * (self.interruptions_count - 1)
+            self.average_interrupt_latency_ms = (total + latency_ms) / self.interruptions_count
 
 
 @dataclass

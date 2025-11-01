@@ -139,6 +139,40 @@ def cmd_config_disable_voice_input(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_config_enable_voice_output(args: argparse.Namespace) -> int:
+    """
+    Enable voice output.
+
+    Args:
+        args: Command arguments
+
+    Returns:
+        Exit code
+    """
+    config = load_config()
+    config.voice_output_enabled = True
+    save_config(config)
+    print("✅ Voice output enabled")
+    return 0
+
+
+def cmd_config_disable_voice_output(args: argparse.Namespace) -> int:
+    """
+    Disable voice output.
+
+    Args:
+        args: Command arguments
+
+    Returns:
+        Exit code
+    """
+    config = load_config()
+    config.voice_output_enabled = False
+    save_config(config)
+    print("✅ Voice output disabled")
+    return 0
+
+
 def cmd_list_devices(args: argparse.Namespace) -> int:
     """
     List audio devices.
@@ -220,6 +254,51 @@ def cmd_test_stt(args: argparse.Namespace) -> int:
         return 1
 
 
+def cmd_test_tts(args: argparse.Namespace) -> int:
+    """
+    Test text-to-speech.
+
+    Args:
+        args: Command arguments
+
+    Returns:
+        Exit code
+    """
+    from src.voice.output_manager import create_voice_output_manager
+
+    print("🔊 Testing text-to-speech...\n")
+
+    # Create output manager
+    manager = create_voice_output_manager()
+    manager.start()
+
+    # Test phrases
+    test_phrases = [
+        "Hello! This is a test of the text to speech system.",
+        "Testing voice output functionality.",
+        "If you can hear this, the system is working correctly.",
+    ]
+
+    try:
+        for i, phrase in enumerate(test_phrases, 1):
+            print(f"\nTest {i}/{len(test_phrases)}: \"{phrase}\"")
+            manager.speak(phrase)
+
+            # Wait for playback to complete
+            import time
+
+            time.sleep(5)
+
+        print("\n✅ TTS test completed")
+        return 0
+
+    except KeyboardInterrupt:
+        print("\n\nTest interrupted")
+        return 1
+    finally:
+        manager.stop()
+
+
 def main() -> int:
     """
     Main CLI entry point.
@@ -245,8 +324,10 @@ def main() -> int:
     parser_config_init = config_subparsers.add_parser("init", help="Initialize default configuration")
     parser_config_init.add_argument("--force", action="store_true", help="Overwrite existing configuration")
 
-    parser_config_enable = config_subparsers.add_parser("enable-voice-input", help="Enable voice input")
-    parser_config_disable = config_subparsers.add_parser("disable-voice-input", help="Disable voice input")
+    parser_config_enable_input = config_subparsers.add_parser("enable-voice-input", help="Enable voice input")
+    parser_config_disable_input = config_subparsers.add_parser("disable-voice-input", help="Disable voice input")
+    parser_config_enable_output = config_subparsers.add_parser("enable-voice-output", help="Enable voice output")
+    parser_config_disable_output = config_subparsers.add_parser("disable-voice-output", help="Disable voice output")
 
     # List commands
     parser_devices = subparsers.add_parser("list-devices", help="List audio devices")
@@ -254,6 +335,7 @@ def main() -> int:
 
     # Test commands
     parser_test_stt = subparsers.add_parser("test-stt", help="Test speech-to-text")
+    parser_test_tts = subparsers.add_parser("test-tts", help="Test text-to-speech")
 
     args = parser.parse_args()
 
@@ -269,6 +351,10 @@ def main() -> int:
             return cmd_config_enable_voice_input(args)
         elif args.config_command == "disable-voice-input":
             return cmd_config_disable_voice_input(args)
+        elif args.config_command == "enable-voice-output":
+            return cmd_config_enable_voice_output(args)
+        elif args.config_command == "disable-voice-output":
+            return cmd_config_disable_voice_output(args)
         else:
             parser_config.print_help()
             return 1
@@ -278,6 +364,8 @@ def main() -> int:
         return cmd_list_characters(args)
     elif args.command == "test-stt":
         return cmd_test_stt(args)
+    elif args.command == "test-tts":
+        return cmd_test_tts(args)
     else:
         parser.print_help()
         return 1

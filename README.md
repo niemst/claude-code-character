@@ -4,7 +4,7 @@ Voice-enabled character interaction for Claude Code. Control Claude Code with yo
 
 ## Features
 
-### ✅ MVP (User Story 1) - Voice Command Input
+### ✅ User Story 1 - Voice Command Input
 
 - **Push-to-talk voice commands** - Press and hold Ctrl+Space, speak your command, release to execute
 - **Free speech recognition** - Uses Google Web Speech API (no API key required)
@@ -12,9 +12,17 @@ Voice-enabled character interaction for Claude Code. Control Claude Code with yo
 - **Performance tracking** - Monitors transcription latency (target: <2s)
 - **Cross-platform** - Works on Windows, macOS, and Linux
 
+### ✅ User Story 2 - Voice Response Output
+
+- **Text-to-speech** - System TTS (free) or ElevenLabs (premium quality)
+- **Automatic provider selection** - Uses best available TTS provider
+- **Audio playback** - Plays responses through speakers/headphones
+- **Streaming support** - Start playback while receiving audio (ElevenLabs)
+- **Interrupt handling** - Stop playback by pressing Ctrl+Space (target: <500ms)
+- **Performance monitoring** - Tracks playback start latency (target: <1s)
+
 ### 🚧 Coming Soon
 
-- **User Story 2** - Voice response output (TTS)
 - **User Story 3** - Character roleplay (e.g., Toudie from Gummy Bears)
 
 ## Requirements
@@ -62,13 +70,14 @@ python -m src config init
 
 This creates `~/.claude-code/voice-config.json` with default settings.
 
-### 2. Enable voice input
+### 2. Enable voice input and output
 
 ```bash
 python -m src config enable-voice-input
+python -m src config enable-voice-output
 ```
 
-### 3. Test your microphone
+### 3. Test your microphone and speakers
 
 ```bash
 python -m src list-devices
@@ -76,13 +85,17 @@ python -m src list-devices
 
 This shows all available audio devices. The default device is used automatically.
 
-### 4. Test speech-to-text
+### 4. Test speech-to-text and text-to-speech
 
 ```bash
+# Test STT (speech input)
 python -m src test-stt
+
+# Test TTS (speech output)
+python -m src test-tts
 ```
 
-Press Ctrl+Space, speak a test phrase, and release. You should see the transcription.
+Press Ctrl+Space, speak a test phrase, and release. You should see the transcription and hear the response.
 
 ### 5. Start voice interaction
 
@@ -181,6 +194,8 @@ python -m src config show                    # Show current configuration
 python -m src config init [--force]         # Initialize default configuration
 python -m src config enable-voice-input     # Enable voice input
 python -m src config disable-voice-input    # Disable voice input
+python -m src config enable-voice-output    # Enable voice output
+python -m src config disable-voice-output   # Disable voice output
 
 # Device management
 python -m src list-devices                  # List audio devices
@@ -188,6 +203,7 @@ python -m src list-characters               # List available characters
 
 # Testing
 python -m src test-stt                      # Test speech-to-text
+python -m src test-tts                      # Test text-to-speech
 ```
 
 ## Usage Examples
@@ -315,12 +331,14 @@ claude-code-character/
 ├── src/
 │   ├── audio/               # Audio capture and playback
 │   │   ├── capture.py       # Push-to-talk and recording
+│   │   ├── playback.py      # Audio playback and streaming
 │   │   └── device_manager.py
 │   ├── voice/               # Voice processing
 │   │   ├── speech_to_text.py
-│   │   ├── text_to_speech.py (TODO)
+│   │   ├── text_to_speech.py
 │   │   ├── voice_session.py
-│   │   └── interaction_manager.py
+│   │   ├── interaction_manager.py
+│   │   └── output_manager.py
 │   ├── character/           # Character profiles
 │   │   ├── profile.py
 │   │   ├── transformer.py (TODO)
@@ -331,7 +349,7 @@ claude-code-character/
 │   │   └── persistence.py
 │   ├── hooks/               # Claude Code integration
 │   │   ├── input_hook.py
-│   │   └── output_hook.py (TODO)
+│   │   └── output_hook.py
 │   ├── cli.py               # Command-line interface
 │   └── __main__.py          # Entry point
 ├── specs/                   # Design documents
@@ -344,33 +362,34 @@ claude-code-character/
 └── README.md
 ```
 
-## Success Criteria (MVP - User Story 1)
+## Success Criteria
 
 - [x] **SC-001**: 80% of common commands successful via voice
 - [x] **SC-002**: Voice command recognition <2 seconds
-- [ ] SC-003: Voice playback starts <1 second (User Story 2)
+- [x] **SC-003**: Voice playback starts <1 second
 - [ ] SC-004: Character roleplay maintains 100% technical accuracy (User Story 3)
 - [ ] SC-005: Complete 15+ minute coding session using only voice
-- [ ] SC-006: Voice interruption responds <500ms (User Story 2)
+- [x] **SC-006**: Voice interruption responds <500ms
 - [ ] SC-007: Character personality in 90%+ of responses (User Story 3)
 - [ ] SC-008: Voice toggle in <3 seconds
 
 ## Roadmap
 
-### Phase 3: User Story 1 (MVP) - ✅ Complete
+### Phase 3: User Story 1 - ✅ Complete
 
 - [x] Push-to-talk voice command input
 - [x] Web Speech API + Whisper fallback STT
 - [x] Performance monitoring
 - [x] Input hook to Claude Code
 
-### Phase 4: User Story 2 - 🚧 In Progress
+### Phase 4: User Story 2 - ✅ Complete
 
-- [ ] Text-to-speech output
-- [ ] System TTS + ElevenLabs support
-- [ ] Audio playback and streaming
-- [ ] Output hook from Claude Code
-- [ ] Interrupt handling
+- [x] Text-to-speech output
+- [x] System TTS + ElevenLabs support
+- [x] Audio playback and streaming
+- [x] Output hook from Claude Code
+- [x] Interrupt handling
+- [x] Performance monitoring
 
 ### Phase 5: User Story 3 - 📋 Planned
 
