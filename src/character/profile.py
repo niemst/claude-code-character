@@ -3,7 +3,6 @@
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional
 
 
 @dataclass
@@ -12,8 +11,8 @@ class VoiceSettings:
 
     stability: float
     similarity_boost: float
-    style: Optional[float] = None
-    use_speaker_boost: Optional[bool] = None
+    style: float | None = None
+    use_speaker_boost: bool | None = None
 
     def __post_init__(self) -> None:
         """Validate voice settings ranges."""
@@ -49,7 +48,7 @@ class CharacterProfile:
     voice_id: str
     voice_settings: VoiceSettings
     system_prompt: str
-    characteristic_phrases: List[str]
+    characteristic_phrases: list[str]
     transformation_rules: TransformationRules
 
     def __post_init__(self) -> None:
@@ -68,7 +67,7 @@ class CharacterProfile:
 
 def load_character_profile(profile_path: Path) -> CharacterProfile:
     """Load a character profile from JSON file."""
-    with open(profile_path, "r", encoding="utf-8") as f:
+    with open(profile_path, encoding="utf-8") as f:
         data = json.load(f)
 
     return CharacterProfile(

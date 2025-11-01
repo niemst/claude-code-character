@@ -138,22 +138,22 @@
 
 **Purpose**: Improvements that affect multiple user stories and final deployment preparation
 
-- [ ] T057 [P] Create main entry point in src/__main__.py (initialize configuration, start voice session, register hooks)
-- [ ] T058 [P] Implement configuration CLI commands in src/config/cli.py (config get, config set voice.* commands)
-- [ ] T059 [P] Implement voice test commands in src/voice/cli.py (test mic, test tts, test elevenlabs)
-- [ ] T060 [P] Implement character list command in src/character/cli.py (list available characters)
-- [ ] T061 [P] Implement audio device list command in src/audio/cli.py (list available input/output devices)
-- [ ] T062 Add environment variable support for API keys in src/config/persistence.py (OPENAI_API_KEY, ELEVENLABS_API_KEY)
-- [ ] T063 Add graceful degradation for missing audio devices in src/audio/device_manager.py (clear error messages)
-- [ ] T064 Add configuration validation on load in src/config/persistence.py (check required fields, valid values)
-- [ ] T065 [P] Add logging infrastructure using Python logging module (configure in src/__main__.py)
-- [ ] T066 Create README.md with installation and quick start instructions (refer to quickstart.md)
-- [ ] T067 [P] Create example configuration file at examples/voice-config.example.json
-- [ ] T068 Run black formatter on all Python files (ensure PEP 8 compliance)
-- [ ] T069 Run ruff linter on all Python files (fix any issues)
-- [ ] T070 Run mypy type checker on all Python files (ensure type safety)
-- [ ] T071 Validate quickstart.md instructions (test installation and basic voice commands)
-- [ ] T072 Verify all Success Criteria from spec.md (SC-001 through SC-008)
+- [x] T057 [P] Create main entry point in src/__main__.py (initialize configuration, start voice session, register hooks)
+- [x] T058 [P] Implement configuration CLI commands in src/config/cli.py (config get, config set voice.* commands)
+- [x] T059 [P] Implement voice test commands in src/voice/cli.py (test mic, test tts, test elevenlabs)
+- [x] T060 [P] Implement character list command in src/character/cli.py (list available characters)
+- [x] T061 [P] Implement audio device list command in src/audio/cli.py (list available input/output devices)
+- [x] T062 Add environment variable support for API keys in src/config/persistence.py (OPENAI_API_KEY, ELEVENLABS_API_KEY)
+- [x] T063 Add graceful degradation for missing audio devices in src/audio/device_manager.py (clear error messages)
+- [x] T064 Add configuration validation on load in src/config/persistence.py (check required fields, valid values)
+- [x] T065 [P] Add logging infrastructure using Python logging module (configure in src/__main__.py)
+- [x] T066 Create README.md with installation and quick start instructions (refer to quickstart.md)
+- [x] T067 [P] Create example configuration file at examples/voice-config.example.json
+- [x] T068 Run black formatter on all Python files (ensure PEP 8 compliance)
+- [x] T069 Run ruff linter on all Python files (fix any issues)
+- [x] T070 Run mypy type checker on all Python files (ensure type safety)
+- [x] T071 Validate quickstart.md instructions (test installation and basic voice commands)
+- [x] T072 Verify all Success Criteria from spec.md (SC-001 through SC-008)
 
 ---
 

@@ -1,7 +1,7 @@
 """Audio capture with push-to-talk hotkey support."""
 
 import threading
-from typing import Callable, Optional
+from collections.abc import Callable
 
 import numpy as np
 from pynput import keyboard
@@ -19,11 +19,11 @@ class AudioCapture:
 
     def __init__(
         self,
-        on_recording_start: Optional[Callable[[], None]] = None,
-        on_recording_stop: Optional[Callable[[np.ndarray, int], None]] = None,
+        on_recording_start: Callable[[], None] | None = None,
+        on_recording_stop: Callable[[np.ndarray, int], None] | None = None,
         sample_rate: int = 16000,
         channels: int = 1,
-        device: Optional[int] = None,
+        device: int | None = None,
     ) -> None:
         """
         Initialize audio capture.
@@ -46,7 +46,7 @@ class AudioCapture:
 
         self._is_recording = False
         self._audio_buffer: list[np.ndarray] = []
-        self._stream: Optional[sd.InputStream] = None
+        self._stream: sd.InputStream | None = None
         self._lock = threading.Lock()
 
     def start_recording(self) -> None:
@@ -70,7 +70,7 @@ class AudioCapture:
             if self.on_recording_start:
                 self.on_recording_start()
 
-    def stop_recording(self) -> Optional[np.ndarray]:
+    def stop_recording(self) -> np.ndarray | None:
         """
         Stop audio capture and return recorded audio.
 
@@ -132,8 +132,8 @@ class PushToTalkListener:
     def __init__(
         self,
         hotkey: str = "ctrl+space",
-        on_press: Optional[Callable[[], None]] = None,
-        on_release: Optional[Callable[[], None]] = None,
+        on_press: Callable[[], None] | None = None,
+        on_release: Callable[[], None] | None = None,
     ) -> None:
         """
         Initialize push-to-talk listener.
@@ -147,7 +147,7 @@ class PushToTalkListener:
         self.on_press = on_press
         self.on_release = on_release
 
-        self._listener: Optional[keyboard.GlobalHotKeys] = None
+        self._listener: keyboard.GlobalHotKeys | None = None
         self._is_active = False
         self._hotkey_pressed = False
 
@@ -244,9 +244,9 @@ class PushToTalkHandler:
     def __init__(
         self,
         hotkey: str = "ctrl+space",
-        on_audio_captured: Optional[Callable[[np.ndarray, int], None]] = None,
+        on_audio_captured: Callable[[np.ndarray, int], None] | None = None,
         sample_rate: int = 16000,
-        device: Optional[int] = None,
+        device: int | None = None,
     ) -> None:
         """
         Initialize push-to-talk handler.
@@ -271,7 +271,7 @@ class PushToTalkHandler:
         # Create hotkey listener
         # Note: pynput's GlobalHotKeys has limitations with detecting key release
         # We'll use a regular keyboard listener instead for better control
-        self._keyboard_listener: Optional[keyboard.Listener] = None
+        self._keyboard_listener: keyboard.Listener | None = None
         self._ctrl_pressed = False
         self._space_pressed = False
         self._is_active = False
@@ -312,9 +312,7 @@ class PushToTalkHandler:
         # Track modifier keys
         if key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l or key == keyboard.Key.ctrl_r:
             self._ctrl_pressed = True
-        elif hasattr(key, "char") and key.char == " ":
-            self._space_pressed = True
-        elif key == keyboard.Key.space:
+        elif hasattr(key, "char") and key.char == " " or key == keyboard.Key.space:
             self._space_pressed = True
 
         # Check if hotkey combination is pressed
@@ -327,9 +325,7 @@ class PushToTalkHandler:
         # Track modifier keys
         if key == keyboard.Key.ctrl or key == keyboard.Key.ctrl_l or key == keyboard.Key.ctrl_r:
             self._ctrl_pressed = False
-        elif hasattr(key, "char") and key.char == " ":
-            self._space_pressed = False
-        elif key == keyboard.Key.space:
+        elif hasattr(key, "char") and key.char == " " or key == keyboard.Key.space:
             self._space_pressed = False
 
         # Check if hotkey combination is released

@@ -1,7 +1,6 @@
 """Output hook for intercepting Claude Code responses and converting to speech."""
 
-import sys
-from typing import Callable, Optional
+from collections.abc import Callable
 
 
 class ClaudeCodeOutputHook:
@@ -13,7 +12,7 @@ class ClaudeCodeOutputHook:
 
     def __init__(
         self,
-        on_response: Optional[Callable[[str], None]] = None,
+        on_response: Callable[[str], None] | None = None,
         min_response_length: int = 5,
         debug: bool = False,
     ) -> None:
@@ -86,7 +85,7 @@ class ClaudeCodeOutputHook:
         self._response_count += 1
 
         if self.debug:
-            print(f"📥 Intercepted response #{self._response_count}: \"{response_text[:50]}...\"")
+            print(f'📥 Intercepted response #{self._response_count}: "{response_text[:50]}..."')
 
         # Call response callback
         if self.on_response:
@@ -103,7 +102,7 @@ class ClaudeCodeOutputHook:
 
 
 # Global hook instance (singleton pattern)
-_global_output_hook: Optional[ClaudeCodeOutputHook] = None
+_global_output_hook: ClaudeCodeOutputHook | None = None
 
 
 def get_output_hook(debug: bool = False) -> ClaudeCodeOutputHook:

@@ -2,8 +2,6 @@
 
 import random
 import re
-from pathlib import Path
-from typing import Optional
 
 from src.character.profile import CharacterProfile, load_all_character_profiles
 from src.config.persistence import load_config
@@ -67,7 +65,7 @@ class TechnicalContentProtector:
         result = text
 
         # Apply each pattern
-        for pattern, label in self.PATTERNS:
+        for pattern, _label in self.PATTERNS:
             result = re.sub(pattern, self._create_placeholder, result)
 
         return result
@@ -116,8 +114,8 @@ class CharacterTransformer:
 
     def __init__(
         self,
-        character_profile: Optional[CharacterProfile] = None,
-        config: Optional[VoiceConfiguration] = None,
+        character_profile: CharacterProfile | None = None,
+        config: VoiceConfiguration | None = None,
     ) -> None:
         """
         Initialize character transformer.
@@ -132,10 +130,9 @@ class CharacterTransformer:
         self.config = config
 
         # Load character profile
-        if character_profile is None:
-            if config.selected_character:
-                profiles = load_all_character_profiles()
-                character_profile = profiles.get(config.selected_character)
+        if character_profile is None and config.selected_character:
+            profiles = load_all_character_profiles()
+            character_profile = profiles.get(config.selected_character)
 
         self.character_profile = character_profile
         self._protector = TechnicalContentProtector()
@@ -256,7 +253,7 @@ class CharacterTransformer:
 
         return text
 
-    def set_character(self, character_name: Optional[str]) -> None:
+    def set_character(self, character_name: str | None) -> None:
         """
         Switch to a different character.
 
@@ -278,7 +275,7 @@ class CharacterTransformer:
         else:
             print(f"⚠️  Character '{character_name}' not found")
 
-    def get_voice_settings(self) -> Optional[tuple[str, dict]]:
+    def get_voice_settings(self) -> tuple[str, dict] | None:
         """
         Get voice ID and settings for current character.
 
@@ -303,7 +300,7 @@ class CharacterTransformer:
         return self._is_active
 
     @property
-    def character_name(self) -> Optional[str]:
+    def character_name(self) -> str | None:
         """Get current character name."""
         if self.character_profile:
             return self.character_profile.name
@@ -311,7 +308,7 @@ class CharacterTransformer:
 
 
 # Global transformer instance (singleton pattern)
-_global_transformer: Optional[CharacterTransformer] = None
+_global_transformer: CharacterTransformer | None = None
 
 
 def get_character_transformer() -> CharacterTransformer:

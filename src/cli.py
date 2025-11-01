@@ -2,7 +2,6 @@
 
 import argparse
 import sys
-from pathlib import Path
 
 from src.audio.device_manager import print_audio_devices
 from src.character.profile import load_all_character_profiles
@@ -63,18 +62,18 @@ def cmd_config_show(args: argparse.Namespace) -> int:
     print(f"  Voice output enabled: {config.voice_output_enabled}")
     print(f"  Push-to-talk key: {config.push_to_talk_key}")
     print(f"  Selected character: {config.selected_character or '(none)'}")
-    print(f"\nAudio devices:")
+    print("\nAudio devices:")
     print(f"  Input: {config.audio_devices.input_device or '(default)'}")
     print(f"  Output: {config.audio_devices.output_device or '(default)'}")
-    print(f"\nAPI keys:")
+    print("\nAPI keys:")
     print(f"  OpenAI: {'✓ Set' if config.api_keys.openai else '✗ Not set'}")
     print(f"  ElevenLabs: {'✓ Set' if config.api_keys.elevenlabs else '✗ Not set'}")
-    print(f"\nTTS:")
+    print("\nTTS:")
     print(f"  Provider: {config.tts_config.provider}")
     print(f"  ElevenLabs model: {config.tts_config.elevenlabs_model or '(none)'}")
-    print(f"\nSTT:")
+    print("\nSTT:")
     print(f"  Whisper model: {config.stt_config.whisper_model}")
-    print(f"\nPerformance:")
+    print("\nPerformance:")
     print(f"  Max transcription wait: {config.performance.max_transcription_wait_seconds}s")
     print(f"  TTS streaming: {config.performance.tts_streaming_enabled}")
 
@@ -240,7 +239,7 @@ def cmd_select_character(args: argparse.Namespace) -> int:
     if character_name not in profiles:
         print(f"❌ Character '{character_name}' not found")
         print("\nAvailable characters:")
-        for name in profiles.keys():
+        for name in profiles:
             print(f"  - {name}")
         return 1
 
@@ -273,7 +272,7 @@ def cmd_test_stt(args: argparse.Namespace) -> int:
 
     def on_command(text: str) -> None:
         transcription.append(text)
-        print(f"\n✅ Transcription: \"{text}\"\n")
+        print(f'\n✅ Transcription: "{text}"\n')
 
     manager = create_voice_interaction_manager(on_command=on_command)
     manager.start()
@@ -322,7 +321,7 @@ def cmd_test_tts(args: argparse.Namespace) -> int:
 
     try:
         for i, phrase in enumerate(test_phrases, 1):
-            print(f"\nTest {i}/{len(test_phrases)}: \"{phrase}\"")
+            print(f'\nTest {i}/{len(test_phrases)}: "{phrase}"')
             manager.speak(phrase)
 
             # Wait for playback to complete
@@ -355,32 +354,46 @@ def main() -> int:
     subparsers = parser.add_subparsers(dest="command", help="Command to run")
 
     # Start command
-    parser_start = subparsers.add_parser("start", help="Start voice interaction")
+    subparsers.add_parser("start", help="Start voice interaction")
 
     # Config commands
     parser_config = subparsers.add_parser("config", help="Configuration commands")
     config_subparsers = parser_config.add_subparsers(dest="config_command")
 
-    parser_config_show = config_subparsers.add_parser("show", help="Show current configuration")
-    parser_config_init = config_subparsers.add_parser("init", help="Initialize default configuration")
-    parser_config_init.add_argument("--force", action="store_true", help="Overwrite existing configuration")
+    config_subparsers.add_parser("show", help="Show current configuration")
+    parser_config_init = config_subparsers.add_parser(
+        "init", help="Initialize default configuration"
+    )
+    parser_config_init.add_argument(
+        "--force", action="store_true", help="Overwrite existing configuration"
+    )
 
-    parser_config_enable_input = config_subparsers.add_parser("enable-voice-input", help="Enable voice input")
-    parser_config_disable_input = config_subparsers.add_parser("disable-voice-input", help="Disable voice input")
-    parser_config_enable_output = config_subparsers.add_parser("enable-voice-output", help="Enable voice output")
-    parser_config_disable_output = config_subparsers.add_parser("disable-voice-output", help="Disable voice output")
+    config_subparsers.add_parser(
+        "enable-voice-input", help="Enable voice input"
+    )
+    config_subparsers.add_parser(
+        "disable-voice-input", help="Disable voice input"
+    )
+    config_subparsers.add_parser(
+        "enable-voice-output", help="Enable voice output"
+    )
+    config_subparsers.add_parser(
+        "disable-voice-output", help="Disable voice output"
+    )
 
     # List commands
-    parser_devices = subparsers.add_parser("list-devices", help="List audio devices")
-    parser_characters = subparsers.add_parser("list-characters", help="List available characters")
+    subparsers.add_parser("list-devices", help="List audio devices")
+    subparsers.add_parser("list-characters", help="List available characters")
 
     # Character commands
-    parser_select_character = subparsers.add_parser("select-character", help="Select character for roleplay")
+    parser_select_character = subparsers.add_parser(
+        "select-character", help="Select character for roleplay"
+    )
     parser_select_character.add_argument("character", help="Character name (or 'none' to disable)")
 
     # Test commands
-    parser_test_stt = subparsers.add_parser("test-stt", help="Test speech-to-text")
-    parser_test_tts = subparsers.add_parser("test-tts", help="Test text-to-speech")
+    subparsers.add_parser("test-stt", help="Test speech-to-text")
+    subparsers.add_parser("test-tts", help="Test text-to-speech")
 
     args = parser.parse_args()
 

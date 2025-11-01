@@ -1,11 +1,8 @@
 """Text-to-speech synthesis with multiple provider support."""
 
-import io
 import time
+from collections.abc import Generator
 from enum import Enum
-from typing import Optional
-
-import numpy as np
 
 try:
     import pyttsx3
@@ -49,7 +46,7 @@ class TtsApiError(TtsError):
 
 
 def synthesize_with_system_tts(
-    text: str, voice: Optional[str] = None, rate: int = 150, volume: float = 0.9
+    text: str, voice: str | None = None, rate: int = 150, volume: float = 0.9
 ) -> bytes:
     """
     Synthesize speech using system TTS (pyttsx3).
@@ -83,7 +80,6 @@ def synthesize_with_system_tts(
         # Note: pyttsx3 doesn't support direct audio output to bytes
         # We'll use a temporary file approach
         import tempfile
-        import wave
 
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp_file:
             tmp_path = tmp_file.name
@@ -113,7 +109,7 @@ def synthesize_with_elevenlabs(
     model: str = "eleven_multilingual_v2",
     stability: float = 0.5,
     similarity_boost: float = 0.75,
-    style: Optional[float] = None,
+    style: float | None = None,
     use_speaker_boost: bool = True,
 ) -> bytes:
     """
@@ -142,7 +138,7 @@ def synthesize_with_elevenlabs(
         raise TtsError("ElevenLabs API key not provided")
 
     try:
-        client = ElevenLabs(api_key=api_key)
+        ElevenLabs(api_key=api_key)
 
         # Configure voice settings
         voice_settings = VoiceSettings(
@@ -189,9 +185,9 @@ def synthesize_with_elevenlabs_streaming(
     model: str = "eleven_multilingual_v2",
     stability: float = 0.5,
     similarity_boost: float = 0.75,
-    style: Optional[float] = None,
+    style: float | None = None,
     use_speaker_boost: bool = True,
-):
+) -> Generator[bytes, None, None]:
     """
     Synthesize speech using ElevenLabs API with streaming.
 
@@ -268,9 +264,9 @@ class TextToSpeech:
         preferred_provider: TtsProvider = TtsProvider.SYSTEM,
         voice_stability: float = 0.5,
         voice_similarity_boost: float = 0.75,
-        voice_style: Optional[float] = None,
+        voice_style: float | None = None,
         use_speaker_boost: bool = True,
-        system_voice: Optional[str] = None,
+        system_voice: str | None = None,
         system_rate: int = 150,
     ) -> None:
         """
@@ -307,7 +303,7 @@ class TextToSpeech:
             self.available_providers.append(TtsProvider.ELEVENLABS)
 
     def synthesize(
-        self, text: str, voice_id: Optional[str] = None, streaming: bool = False
+        self, text: str, voice_id: str | None = None, streaming: bool = False
     ) -> tuple[bytes, TtsProvider, float]:
         """
         Synthesize text to speech using available providers with automatic fallback.
@@ -334,7 +330,7 @@ class TextToSpeech:
         # Determine provider order
         providers = self._get_provider_order()
 
-        last_error: Optional[Exception] = None
+        last_error: Exception | None = None
         start_time = time.time()
 
         for provider in providers:
@@ -372,7 +368,9 @@ class TextToSpeech:
             f"All TTS providers failed. Last error: {last_error}. Duration: {duration_ms:.0f}ms"
         )
 
-    def synthesize_streaming(self, text: str, voice_id: Optional[str] = None):
+    def synthesize_streaming(
+        self, text: str, voice_id: str | None = None
+    ) -> Generator[bytes, None, None]:
         """
         Synthesize text to speech with streaming (ElevenLabs only).
 
@@ -430,7 +428,7 @@ class TextToSpeech:
         voice_id: str,
         stability: float = 0.5,
         similarity_boost: float = 0.75,
-        style: Optional[float] = None,
+        style: float | None = None,
         use_speaker_boost: bool = True,
     ) -> None:
         """

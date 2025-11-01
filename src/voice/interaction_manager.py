@@ -1,15 +1,14 @@
 """Voice interaction manager orchestrating push-to-talk, recording, and transcription."""
 
 import time
-from pathlib import Path
-from typing import Callable, Optional
+from collections.abc import Callable
 
 import numpy as np
 
 from src.audio.capture import PushToTalkHandler
 from src.config.persistence import load_config
 from src.config.voice_config import VoiceConfiguration
-from src.voice.speech_to_text import SpeechToText, SttProvider
+from src.voice.speech_to_text import SpeechToText
 from src.voice.voice_session import LastCommand, VoiceSession
 
 
@@ -29,8 +28,8 @@ class VoiceInteractionManager:
 
     def __init__(
         self,
-        config: Optional[VoiceConfiguration] = None,
-        on_command: Optional[Callable[[str], None]] = None,
+        config: VoiceConfiguration | None = None,
+        on_command: Callable[[str], None] | None = None,
     ) -> None:
         """
         Initialize voice interaction manager.
@@ -126,13 +125,13 @@ class VoiceInteractionManager:
 
         # Transcribe audio
         print("🔄 Transcribing...")
-        transcription_start = time.time()
+        time.time()
 
         try:
             text, provider_used, duration_ms = self.stt.transcribe(audio_data, sample_rate)
             transcription_duration = int(duration_ms)
 
-            print(f"✅ Transcribed ({provider_used.value}): \"{text}\"")
+            print(f'✅ Transcribed ({provider_used.value}): "{text}"')
             print(f"   Transcription time: {transcription_duration}ms")
 
             # Update session with command
@@ -149,9 +148,7 @@ class VoiceInteractionManager:
 
             # Check performance criteria (SC-002: <2s transcription)
             if transcription_duration > 2000:
-                print(
-                    f"⚠️  Transcription slower than target (<2s): {transcription_duration}ms"
-                )
+                print(f"⚠️  Transcription slower than target (<2s): {transcription_duration}ms")
 
             # Send command to Claude Code
             if self.on_command:
@@ -166,7 +163,7 @@ class VoiceInteractionManager:
             # Reset listening state
             self.session.set_listening(False)
 
-    def _get_input_device_id(self) -> Optional[int]:
+    def _get_input_device_id(self) -> int | None:
         """
         Get input device ID from configuration.
 
@@ -196,7 +193,7 @@ class VoiceInteractionManager:
 
 
 def create_voice_interaction_manager(
-    on_command: Optional[Callable[[str], None]] = None,
+    on_command: Callable[[str], None] | None = None,
 ) -> VoiceInteractionManager:
     """
     Create and configure voice interaction manager.

@@ -4,7 +4,7 @@ import io
 import threading
 import time
 import wave
-from typing import Callable, Iterator, Optional
+from collections.abc import Callable, Iterator
 
 import numpy as np
 
@@ -35,9 +35,9 @@ class AudioPlayer:
 
     def __init__(
         self,
-        on_playback_start: Optional[Callable[[], None]] = None,
-        on_playback_stop: Optional[Callable[[], None]] = None,
-        device: Optional[int] = None,
+        on_playback_start: Callable[[], None] | None = None,
+        on_playback_stop: Callable[[], None] | None = None,
+        device: int | None = None,
     ) -> None:
         """
         Initialize audio player.
@@ -56,8 +56,8 @@ class AudioPlayer:
 
         self._is_playing = False
         self._should_stop = False
-        self._stream: Optional[sd.OutputStream] = None
-        self._playback_thread: Optional[threading.Thread] = None
+        self._stream: sd.OutputStream | None = None
+        self._playback_thread: threading.Thread | None = None
         self._lock = threading.Lock()
 
     def play(self, audio_data: bytes, audio_format: str = "auto") -> None:
@@ -219,41 +219,40 @@ class AudioPlayer:
         Returns:
             Tuple of (audio_array, sample_rate)
         """
-        with io.BytesIO(wav_data) as wav_io:
-            with wave.open(wav_io, "rb") as wav_file:
-                sample_rate = wav_file.getframerate()
-                n_channels = wav_file.getnchannels()
-                sample_width = wav_file.getsampwidth()
-                n_frames = wav_file.getnframes()
+        with io.BytesIO(wav_data) as wav_io, wave.open(wav_io, "rb") as wav_file:
+            sample_rate = wav_file.getframerate()
+            n_channels = wav_file.getnchannels()
+            sample_width = wav_file.getsampwidth()
+            n_frames = wav_file.getnframes()
 
-                # Read all frames
-                frames = wav_file.readframes(n_frames)
+            # Read all frames
+            frames = wav_file.readframes(n_frames)
 
-                # Convert to numpy array
-                if sample_width == 1:
-                    dtype = np.uint8
-                elif sample_width == 2:
-                    dtype = np.int16
-                elif sample_width == 4:
-                    dtype = np.int32
-                else:
-                    raise PlaybackError(f"Unsupported sample width: {sample_width}")
+            # Convert to numpy array
+            if sample_width == 1:
+                dtype = np.uint8
+            elif sample_width == 2:
+                dtype = np.int16
+            elif sample_width == 4:
+                dtype = np.int32
+            else:
+                raise PlaybackError(f"Unsupported sample width: {sample_width}")
 
-                audio_array = np.frombuffer(frames, dtype=dtype)
+            audio_array = np.frombuffer(frames, dtype=dtype)
 
-                # Reshape for multi-channel
-                if n_channels > 1:
-                    audio_array = audio_array.reshape(-1, n_channels)
+            # Reshape for multi-channel
+            if n_channels > 1:
+                audio_array = audio_array.reshape(-1, n_channels)
 
-                # Normalize to float32 [-1.0, 1.0]
-                if dtype == np.uint8:
-                    audio_array = (audio_array.astype(np.float32) - 128) / 128.0
-                elif dtype == np.int16:
-                    audio_array = audio_array.astype(np.float32) / 32768.0
-                elif dtype == np.int32:
-                    audio_array = audio_array.astype(np.float32) / 2147483648.0
+            # Normalize to float32 [-1.0, 1.0]
+            if dtype == np.uint8:
+                audio_array = (audio_array.astype(np.float32) - 128) / 128.0
+            elif dtype == np.int16:
+                audio_array = audio_array.astype(np.float32) / 32768.0
+            elif dtype == np.int32:
+                audio_array = audio_array.astype(np.float32) / 2147483648.0
 
-                return (audio_array, sample_rate)
+            return (audio_array, sample_rate)
 
     def _load_mp3(self, mp3_data: bytes) -> tuple[np.ndarray, int]:
         """
@@ -289,9 +288,7 @@ class AudioPlayer:
             return (samples, audio.frame_rate)
 
         except ImportError:
-            raise PlaybackError(
-                "MP3 playback requires pydub. Install with: pip install pydub"
-            )
+            raise PlaybackError("MP3 playback requires pydub. Install with: pip install pydub")
         except Exception as e:
             raise PlaybackError(f"Failed to load MP3: {e}")
 
@@ -346,7 +343,7 @@ class PlaybackController:
     def __init__(
         self,
         player: AudioPlayer,
-        on_queue_empty: Optional[Callable[[], None]] = None,
+        on_queue_empty: Callable[[], None] | None = None,
     ) -> None:
         """
         Initialize playback controller.
@@ -360,7 +357,7 @@ class PlaybackController:
 
         self._queue: list[tuple[bytes, str, int]] = []  # (audio_data, format, timestamp)
         self._lock = threading.Lock()
-        self._controller_thread: Optional[threading.Thread] = None
+        self._controller_thread: threading.Thread | None = None
         self._is_active = False
         self._should_stop = False
 

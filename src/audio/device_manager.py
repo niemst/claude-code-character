@@ -1,15 +1,14 @@
 """Audio device enumeration and management."""
 
-from typing import List, Optional, Tuple
-
 try:
     import sounddevice as sd
+
     SOUNDDEVICE_AVAILABLE = True
 except ImportError:
     SOUNDDEVICE_AVAILABLE = False
 
 
-def list_audio_devices() -> List[Tuple[int, str, str]]:
+def list_audio_devices() -> list[tuple[int, str, str]]:
     """
     List available audio input and output devices.
 
@@ -18,7 +17,9 @@ def list_audio_devices() -> List[Tuple[int, str, str]]:
         device_type is either 'input', 'output', or 'both'
     """
     if not SOUNDDEVICE_AVAILABLE:
-        print("Warning: sounddevice not available, cannot enumerate audio devices")
+        print("⚠️  sounddevice library not available")
+        print("    Install with: uv pip install sounddevice")
+        print("    Or: pip install sounddevice")
         return []
 
     devices = []
@@ -40,12 +41,16 @@ def list_audio_devices() -> List[Tuple[int, str, str]]:
 
             devices.append((idx, device_name, device_type))
     except Exception as e:
-        print(f"Error enumerating audio devices: {e}")
+        print(f"❌ Error enumerating audio devices: {e}")
+        print("   Possible causes:")
+        print("   - No audio devices connected")
+        print("   - Audio driver issues")
+        print("   - PortAudio not installed (Linux: sudo apt-get install portaudio19-dev)")
 
     return devices
 
 
-def get_default_input_device() -> Optional[Tuple[int, str]]:
+def get_default_input_device() -> tuple[int, str] | None:
     """
     Get the default audio input device.
 
@@ -65,7 +70,7 @@ def get_default_input_device() -> Optional[Tuple[int, str]]:
         return None
 
 
-def get_default_output_device() -> Optional[Tuple[int, str]]:
+def get_default_output_device() -> tuple[int, str] | None:
     """
     Get the default audio output device.
 

@@ -3,7 +3,7 @@
 import json
 import os
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from src.config.voice_config import (
     ApiKeys,
@@ -24,51 +24,68 @@ def get_config_path() -> Path:
 
 
 def load_config() -> VoiceConfiguration:
-    """Load voice configuration from ~/.claude-code/voice-config.json."""
+    """
+    Load voice configuration from ~/.claude-code/voice-config.json.
+
+    API keys can be overridden by environment variables:
+    - OPENAI_API_KEY
+    - ELEVENLABS_API_KEY
+    """
     config_path = get_config_path()
 
     if not config_path.exists():
-        return create_default_config()
+        config = create_default_config()
+    else:
+        try:
+            with open(config_path, encoding="utf-8") as f:
+                data: dict[str, Any] = json.load(f)
 
-    try:
-        with open(config_path, "r", encoding="utf-8") as f:
-            data: Dict[str, Any] = json.load(f)
+            config = VoiceConfiguration(
+                config_version=data.get("config_version", 1),
+                voice_input_enabled=data.get("voice_input_enabled", False),
+                voice_output_enabled=data.get("voice_output_enabled", False),
+                selected_character=data.get("selected_character"),
+                push_to_talk_key=data.get("push_to_talk_key", "Ctrl+Space"),
+                audio_devices=AudioDevices(
+                    input_device=data.get("audio_devices", {}).get("input_device"),
+                    output_device=data.get("audio_devices", {}).get("output_device"),
+                ),
+                api_keys=ApiKeys(
+                    openai=data.get("api_keys", {}).get("openai", ""),
+                    elevenlabs=data.get("api_keys", {}).get("elevenlabs", ""),
+                ),
+                stt_config=SttConfig(
+                    whisper_model=data.get("stt_config", {}).get("whisper_model", "whisper-1")
+                ),
+                tts_config=TtsConfig(
+                    provider=data.get("tts_config", {}).get("provider", "system"),
+                    elevenlabs_model=data.get("tts_config", {}).get("elevenlabs_model"),
+                    system_voice=data.get("tts_config", {}).get("system_voice"),
+                ),
+                performance=Performance(
+                    max_transcription_wait_seconds=data.get("performance", {}).get(
+                        "max_transcription_wait_seconds", 3
+                    ),
+                    tts_streaming_enabled=data.get("performance", {}).get(
+                        "tts_streaming_enabled", True
+                    ),
+                ),
+            )
+        except (json.JSONDecodeError, KeyError, ValueError) as e:
+            print(f"Warning: Failed to load config from {config_path}: {e}")
+            print("Using default configuration instead")
+            config = create_default_config()
 
-        return VoiceConfiguration(
-            config_version=data.get("config_version", 1),
-            voice_input_enabled=data.get("voice_input_enabled", False),
-            voice_output_enabled=data.get("voice_output_enabled", False),
-            selected_character=data.get("selected_character"),
-            push_to_talk_key=data.get("push_to_talk_key", "Ctrl+Space"),
-            audio_devices=AudioDevices(
-                input_device=data.get("audio_devices", {}).get("input_device"),
-                output_device=data.get("audio_devices", {}).get("output_device"),
-            ),
-            api_keys=ApiKeys(
-                openai=data.get("api_keys", {}).get("openai", ""),
-                elevenlabs=data.get("api_keys", {}).get("elevenlabs", ""),
-            ),
-            stt_config=SttConfig(
-                whisper_model=data.get("stt_config", {}).get("whisper_model", "whisper-1")
-            ),
-            tts_config=TtsConfig(
-                provider=data.get("tts_config", {}).get("provider", "system"),
-                elevenlabs_model=data.get("tts_config", {}).get("elevenlabs_model"),
-                system_voice=data.get("tts_config", {}).get("system_voice"),
-            ),
-            performance=Performance(
-                max_transcription_wait_seconds=data.get("performance", {}).get(
-                    "max_transcription_wait_seconds", 3
-                ),
-                tts_streaming_enabled=data.get("performance", {}).get(
-                    "tts_streaming_enabled", True
-                ),
-            ),
-        )
-    except (json.JSONDecodeError, KeyError, ValueError) as e:
-        print(f"Warning: Failed to load config from {config_path}: {e}")
-        print("Using default configuration instead")
-        return create_default_config()
+    # Override API keys from environment variables if set
+    openai_env = os.getenv("OPENAI_API_KEY")
+    if openai_env:
+        config.api_keys.openai = openai_env
+
+    elevenlabs_env = os.getenv("ELEVENLABS_API_KEY")
+    if elevenlabs_env:
+        config.api_keys.elevenlabs = elevenlabs_env
+
+    return config
 
 
 def save_config(config: VoiceConfiguration) -> None:

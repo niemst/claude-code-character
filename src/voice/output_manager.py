@@ -1,13 +1,12 @@
 """Voice output manager orchestrating TTS and audio playback."""
 
 import time
-from pathlib import Path
-from typing import Callable, Optional
+from collections.abc import Callable
 
 from src.audio.playback import AudioPlayer, PlaybackController
 from src.character.transformer import CharacterTransformer
 from src.config.persistence import load_config
-from src.config.voice_config import TtsConfig, VoiceConfiguration
+from src.config.voice_config import VoiceConfiguration
 from src.hooks.output_hook import ClaudeCodeOutputHook
 from src.voice.text_to_speech import TextToSpeech, TtsProvider
 from src.voice.voice_session import VoiceSession
@@ -28,10 +27,10 @@ class VoiceOutputManager:
 
     def __init__(
         self,
-        config: Optional[VoiceConfiguration] = None,
-        session: Optional[VoiceSession] = None,
-        on_playback_start: Optional[Callable[[], None]] = None,
-        on_playback_stop: Optional[Callable[[], None]] = None,
+        config: VoiceConfiguration | None = None,
+        session: VoiceSession | None = None,
+        on_playback_start: Callable[[], None] | None = None,
+        on_playback_stop: Callable[[], None] | None = None,
     ) -> None:
         """
         Initialize voice output manager.
@@ -111,13 +110,13 @@ class VoiceOutputManager:
 
         print("✅ Voice output started")
         print(f"   TTS providers: {[p.value for p in self.tts.get_available_providers()]}")
-        print(f"   Playback enabled")
+        print("   Playback enabled")
 
         # Show character status
         if self.character_transformer.is_active:
             print(f"   ✨ Character: {self.character_transformer.character_name}")
         else:
-            print(f"   Character: (none)")
+            print("   Character: (none)")
         print()
 
     def stop(self) -> None:
@@ -136,7 +135,7 @@ class VoiceOutputManager:
         print("✅ Voice output stopped")
         self._print_statistics()
 
-    def speak(self, text: str, voice_id: Optional[str] = None) -> None:
+    def speak(self, text: str, voice_id: str | None = None) -> None:
         """
         Manually speak text (for testing).
 
@@ -174,10 +173,10 @@ class VoiceOutputManager:
         Args:
             response_text: Response text from Claude Code
         """
-        print(f"📥 Response intercepted: \"{response_text[:50]}...\"")
+        print(f'📥 Response intercepted: "{response_text[:50]}..."')
         self._process_response(response_text)
 
-    def _process_response(self, text: str, voice_id: Optional[str] = None) -> None:
+    def _process_response(self, text: str, voice_id: str | None = None) -> None:
         """
         Process response text through TTS and queue for playback.
 
@@ -194,7 +193,9 @@ class VoiceOutputManager:
         character_transformed = was_transformed
 
         if was_transformed:
-            print(f"✨ Character transformation applied ({self.character_transformer.character_name})")
+            print(
+                f"✨ Character transformation applied ({self.character_transformer.character_name})"
+            )
 
         # Get character-specific voice settings if available
         if voice_id is None:
@@ -229,16 +230,16 @@ class VoiceOutputManager:
             self.session.statistics.update_playback_start_time(playback_start_latency)
 
             if playback_start_latency > 1000:
-                print(
-                    f"⚠️  Playback start slower than target (<1s): {playback_start_latency}ms"
-                )
+                print(f"⚠️  Playback start slower than target (<1s): {playback_start_latency}ms")
 
             # Queue for playback
             self.playback_controller.queue_audio(audio_data, "auto")
 
             # Queue response in session
             self.session.queue_response(
-                text=transformed_text, timestamp=response_timestamp, character_transformed=character_transformed
+                text=transformed_text,
+                timestamp=response_timestamp,
+                character_transformed=character_transformed,
             )
 
         except Exception as e:
@@ -276,7 +277,7 @@ class VoiceOutputManager:
         # All responses played
         pass
 
-    def _get_output_device_id(self) -> Optional[int]:
+    def _get_output_device_id(self) -> int | None:
         """
         Get output device ID from configuration.
 
@@ -308,7 +309,7 @@ class VoiceOutputManager:
 
 
 def create_voice_output_manager(
-    session: Optional[VoiceSession] = None,
+    session: VoiceSession | None = None,
 ) -> VoiceOutputManager:
     """
     Create and configure voice output manager.

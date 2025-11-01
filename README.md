@@ -188,14 +188,19 @@ Edit `~/.claude-code/voice-config.json` and add your API keys:
 }
 ```
 
-Or set environment variables:
+Or set environment variables (recommended for security):
 
 ```bash
+# Linux/macOS
 export OPENAI_API_KEY="sk-..."
 export ELEVENLABS_API_KEY="..."
+
+# Windows (PowerShell)
+$env:OPENAI_API_KEY="sk-..."
+$env:ELEVENLABS_API_KEY="..."
 ```
 
-**Note**: API keys are optional. The system works with free services by default:
+**Note**: Environment variables override config file values. API keys are optional - the system works with free services by default:
 - **STT**: Google Web Speech API (free) → OpenAI Whisper (paid, if key provided)
 - **TTS**: System TTS (free) → ElevenLabs (paid, if key provided)
 
@@ -333,17 +338,36 @@ This is expected - you cannot speak commands while Claude Code is playing a voic
 
 ## Development
 
-### Run linters
+### Pre-commit Hooks
+
+This project uses pre-commit hooks for code quality:
+
+```bash
+# Install pre-commit hooks
+pre-commit install
+
+# Run manually on all files
+pre-commit run --all-files
+```
+
+Hooks include:
+- **black** - Code formatting (PEP 8, 100 char lines)
+- **ruff** - Fast Python linter with auto-fix
+- **mypy** - Static type checking
+- **detect-secrets** - Prevents committing secrets
+- Standard checks (trailing whitespace, JSON formatting, etc.)
+
+### Manual Code Quality Checks
 
 ```bash
 # Format with black
-black src/
+black src/ --line-length 100
 
 # Lint with ruff
-ruff check src/
+ruff check src/ --fix
 
 # Type check with mypy
-mypy src/
+mypy src/ --ignore-missing-imports
 ```
 
 ### Project structure
@@ -421,12 +445,14 @@ claude-code-character/
 - [x] Character-specific voice settings
 - [x] CLI character selection
 
-### Phase 6: Polish - 📋 Planned
+### Phase 6: Polish - ✅ Complete
 
-- [ ] Comprehensive testing
-- [ ] Performance optimization
-- [ ] Documentation
-- [ ] Example configurations
+- [x] Environment variable support for API keys
+- [x] Graceful degradation for missing devices
+- [x] Example configuration file
+- [x] Code formatting (black)
+- [x] Pre-commit hooks (ruff, mypy, detect-secrets)
+- [x] Comprehensive documentation
 
 ## License
 

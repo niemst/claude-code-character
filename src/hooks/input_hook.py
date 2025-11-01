@@ -1,7 +1,6 @@
 """Input hook for sending voice commands to Claude Code."""
 
 import sys
-from typing import Optional
 
 
 class ClaudeCodeInputHook:
@@ -40,7 +39,9 @@ class ClaudeCodeInputHook:
         formatted_command = command_text.strip()
 
         if self.debug:
-            print(f"📤 Sending command #{self._command_count} to Claude Code: \"{formatted_command}\"")
+            print(
+                f'📤 Sending command #{self._command_count} to Claude Code: "{formatted_command}"'
+            )
 
         # Send to Claude Code via stdout in a special format
         # Claude Code can detect this pattern and process it as user input
@@ -72,7 +73,7 @@ class ClaudeCodeInputHook:
 
 
 # Global hook instance (singleton pattern)
-_global_hook: Optional[ClaudeCodeInputHook] = None
+_global_hook: ClaudeCodeInputHook | None = None
 
 
 def get_input_hook(debug: bool = False) -> ClaudeCodeInputHook:

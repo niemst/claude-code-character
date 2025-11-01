@@ -3,7 +3,6 @@
 import io
 import time
 from enum import Enum
-from typing import Optional
 
 import numpy as np
 
@@ -200,7 +199,10 @@ class SpeechToText:
             self.available_providers.append(SttProvider.WHISPER_API)
 
     def transcribe(
-        self, audio_data: np.ndarray, sample_rate: int, preferred_provider: Optional[SttProvider] = None
+        self,
+        audio_data: np.ndarray,
+        sample_rate: int,
+        preferred_provider: SttProvider | None = None,
     ) -> tuple[str, SttProvider, float]:
         """
         Transcribe audio to text using available providers with automatic fallback.
@@ -224,7 +226,7 @@ class SpeechToText:
         # Determine provider order
         providers = self._get_provider_order(preferred_provider)
 
-        last_error: Optional[Exception] = None
+        last_error: Exception | None = None
         start_time = time.time()
 
         for provider in providers:
@@ -253,7 +255,7 @@ class SpeechToText:
             f"All STT providers failed. Last error: {last_error}. Duration: {duration_ms:.0f}ms"
         )
 
-    def _get_provider_order(self, preferred_provider: Optional[SttProvider]) -> list[SttProvider]:
+    def _get_provider_order(self, preferred_provider: SttProvider | None) -> list[SttProvider]:
         """
         Get provider order based on preference.
 

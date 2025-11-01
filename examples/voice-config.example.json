@@ -1,0 +1,27 @@
+{
+  "api_keys": {
+    "elevenlabs": "",
+    "openai": ""
+  },
+  "audio_devices": {
+    "input_device": null,
+    "output_device": null
+  },
+  "config_version": 1,
+  "performance": {
+    "max_transcription_wait_seconds": 3,
+    "tts_streaming_enabled": true
+  },
+  "push_to_talk_key": "Ctrl+Space",
+  "selected_character": "toudie",
+  "stt_config": {
+    "whisper_model": "whisper-1"
+  },
+  "tts_config": {
+    "elevenlabs_model": "eleven_multilingual_v2",
+    "provider": "system",
+    "system_voice": null
+  },
+  "voice_input_enabled": true,
+  "voice_output_enabled": true
+}

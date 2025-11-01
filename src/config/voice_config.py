@@ -1,15 +1,15 @@
 """Voice configuration data structures and defaults."""
 
 from dataclasses import dataclass, field
-from typing import Literal, Optional
+from typing import Literal
 
 
 @dataclass
 class AudioDevices:
     """Audio input/output device configuration."""
 
-    input_device: Optional[str] = None
-    output_device: Optional[str] = None
+    input_device: str | None = None
+    output_device: str | None = None
 
 
 @dataclass
@@ -32,10 +32,10 @@ class TtsConfig:
     """Text-to-speech configuration."""
 
     provider: Literal["system", "elevenlabs"] = "system"
-    elevenlabs_model: Optional[
-        Literal["eleven_multilingual_v2", "eleven_turbo_v2"]
-    ] = "eleven_multilingual_v2"
-    system_voice: Optional[str] = None
+    elevenlabs_model: Literal["eleven_multilingual_v2", "eleven_turbo_v2"] | None = (
+        "eleven_multilingual_v2"
+    )
+    system_voice: str | None = None
 
 
 @dataclass
@@ -53,7 +53,7 @@ class VoiceConfiguration:
     config_version: int = 1
     voice_input_enabled: bool = False
     voice_output_enabled: bool = False
-    selected_character: Optional[str] = None
+    selected_character: str | None = None
     push_to_talk_key: str = "Ctrl+Space"
     audio_devices: AudioDevices = field(default_factory=AudioDevices)
     api_keys: ApiKeys = field(default_factory=ApiKeys)

@@ -2,7 +2,7 @@
 
 import uuid
 from dataclasses import dataclass, field
-from typing import Any, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -46,7 +46,7 @@ class Statistics:
         total = self.average_playback_start_time_ms * (count - 1)
         self.average_playback_start_time_ms = (total + duration_ms) / count
 
-    def increment_interruptions(self, latency_ms: Optional[int] = None) -> None:
+    def increment_interruptions(self, latency_ms: int | None = None) -> None:
         """
         Increment interruption counter and update latency.
 
@@ -68,9 +68,9 @@ class VoiceSession:
     session_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     is_listening: bool = False
     is_playing: bool = False
-    current_audio_stream: Optional[Any] = None
-    pending_responses: List[PendingResponse] = field(default_factory=list)
-    last_command: Optional[LastCommand] = None
+    current_audio_stream: Any | None = None
+    pending_responses: list[PendingResponse] = field(default_factory=list)
+    last_command: LastCommand | None = None
     statistics: Statistics = field(default_factory=Statistics)
 
     def __post_init__(self) -> None:
@@ -98,7 +98,7 @@ class VoiceSession:
             )
         )
 
-    def dequeue_response(self) -> Optional[PendingResponse]:
+    def dequeue_response(self) -> PendingResponse | None:
         """Remove and return the next response from the queue (FIFO)."""
         if self.pending_responses:
             return self.pending_responses.pop(0)
