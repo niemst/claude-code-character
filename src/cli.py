@@ -215,6 +215,47 @@ def cmd_list_characters(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_select_character(args: argparse.Namespace) -> int:
+    """
+    Select character for roleplay.
+
+    Args:
+        args: Command arguments
+
+    Returns:
+        Exit code
+    """
+    character_name = args.character
+
+    # Special case: "none" to disable character
+    if character_name.lower() == "none":
+        config = load_config()
+        config.selected_character = None
+        save_config(config)
+        print("✅ Character disabled")
+        return 0
+
+    # Validate character exists
+    profiles = load_all_character_profiles()
+    if character_name not in profiles:
+        print(f"❌ Character '{character_name}' not found")
+        print("\nAvailable characters:")
+        for name in profiles.keys():
+            print(f"  - {name}")
+        return 1
+
+    # Set character
+    config = load_config()
+    config.selected_character = character_name
+    save_config(config)
+
+    profile = profiles[character_name]
+    print(f"✅ Selected character: {profile.display_name}")
+    print(f"   Description: {profile.description}")
+    print(f"   Voice ID: {profile.voice_id}")
+    return 0
+
+
 def cmd_test_stt(args: argparse.Namespace) -> int:
     """
     Test speech-to-text.
@@ -333,6 +374,10 @@ def main() -> int:
     parser_devices = subparsers.add_parser("list-devices", help="List audio devices")
     parser_characters = subparsers.add_parser("list-characters", help="List available characters")
 
+    # Character commands
+    parser_select_character = subparsers.add_parser("select-character", help="Select character for roleplay")
+    parser_select_character.add_argument("character", help="Character name (or 'none' to disable)")
+
     # Test commands
     parser_test_stt = subparsers.add_parser("test-stt", help="Test speech-to-text")
     parser_test_tts = subparsers.add_parser("test-tts", help="Test text-to-speech")
@@ -362,6 +407,8 @@ def main() -> int:
         return cmd_list_devices(args)
     elif args.command == "list-characters":
         return cmd_list_characters(args)
+    elif args.command == "select-character":
+        return cmd_select_character(args)
     elif args.command == "test-stt":
         return cmd_test_stt(args)
     elif args.command == "test-tts":

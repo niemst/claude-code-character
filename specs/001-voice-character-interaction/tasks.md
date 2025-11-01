@@ -118,17 +118,17 @@
 
 ### Implementation for User Story 3
 
-- [ ] T046 [P] [US3] Implement character text transformer in src/character/transformer.py (apply personality to response text)
-- [ ] T047 [P] [US3] Implement system prompt processor in src/character/transformer.py (use character systemPrompt for transformation)
-- [ ] T048 [P] [US3] Implement characteristic phrase injector in src/character/transformer.py (add phrases from character profile)
-- [ ] T049 [US3] Implement technical content preservation in src/character/transformer.py (identify and protect code, paths, errors)
-- [ ] T050 [US3] Implement character selection logic in src/character/transformer.py (load selected character from config)
-- [ ] T051 [US3] Integrate character transformer with output hook in src/hooks/output_hook.py (transform before TTS if character active)
-- [ ] T052 [US3] Implement character-specific voice selection in src/voice/text_to_speech.py (use CharacterProfile.voiceId for ElevenLabs)
-- [ ] T053 [US3] Implement voice settings application in src/voice/text_to_speech.py (apply stability, similarityBoost from character profile)
-- [ ] T054 [US3] Add character transformation tracking in src/voice/voice_session.py (mark responses as characterTransformed)
-- [ ] T055 [US3] Add validation for preserveTechnicalContent in src/character/profile.py (enforce must be True)
-- [ ] T056 [US3] Implement character switch handling in src/character/transformer.py (apply to next response, not mid-response)
+- [x] T046 [P] [US3] Implement character text transformer in src/character/transformer.py (apply personality to response text)
+- [x] T047 [P] [US3] Implement system prompt processor in src/character/transformer.py (use character systemPrompt for transformation)
+- [x] T048 [P] [US3] Implement characteristic phrase injector in src/character/transformer.py (add phrases from character profile)
+- [x] T049 [US3] Implement technical content preservation in src/character/transformer.py (identify and protect code, paths, errors)
+- [x] T050 [US3] Implement character selection logic in src/character/transformer.py (load selected character from config)
+- [x] T051 [US3] Integrate character transformer with output hook in src/hooks/output_hook.py (transform before TTS if character active)
+- [x] T052 [US3] Implement character-specific voice selection in src/voice/text_to_speech.py (use CharacterProfile.voiceId for ElevenLabs)
+- [x] T053 [US3] Implement voice settings application in src/voice/text_to_speech.py (apply stability, similarityBoost from character profile)
+- [x] T054 [US3] Add character transformation tracking in src/voice/voice_session.py (mark responses as characterTransformed)
+- [x] T055 [US3] Add validation for preserveTechnicalContent in src/character/profile.py (enforce must be True)
+- [x] T056 [US3] Implement character switch handling in src/character/transformer.py (apply to next response, not mid-response)
 
 **Checkpoint**: All user stories should now be independently functional - complete voice interaction with optional character roleplay
 

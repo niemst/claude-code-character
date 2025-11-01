@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Callable, Optional
 
 from src.audio.playback import AudioPlayer, PlaybackController
+from src.character.transformer import CharacterTransformer
 from src.config.persistence import load_config
 from src.config.voice_config import TtsConfig, VoiceConfiguration
 from src.hooks.output_hook import ClaudeCodeOutputHook
@@ -84,6 +85,9 @@ class VoiceOutputManager:
             on_response=self._on_response_intercepted, debug=False
         )
 
+        # Initialize character transformer
+        self.character_transformer = CharacterTransformer(config=self.config)
+
         self._is_active = False
         self._response_timestamps: dict[str, int] = {}  # Track TTS start time
 
@@ -107,7 +111,14 @@ class VoiceOutputManager:
 
         print("✅ Voice output started")
         print(f"   TTS providers: {[p.value for p in self.tts.get_available_providers()]}")
-        print(f"   Playback enabled\n")
+        print(f"   Playback enabled")
+
+        # Show character status
+        if self.character_transformer.is_active:
+            print(f"   ✨ Character: {self.character_transformer.character_name}")
+        else:
+            print(f"   Character: (none)")
+        print()
 
     def stop(self) -> None:
         """Stop voice output."""
@@ -178,12 +189,33 @@ class VoiceOutputManager:
         tts_start = time.time()
         response_timestamp = int(tts_start * 1000)
 
+        # Apply character transformation if active
+        transformed_text, was_transformed = self.character_transformer.transform(text)
+        character_transformed = was_transformed
+
+        if was_transformed:
+            print(f"✨ Character transformation applied ({self.character_transformer.character_name})")
+
+        # Get character-specific voice settings if available
+        if voice_id is None:
+            voice_settings = self.character_transformer.get_voice_settings()
+            if voice_settings:
+                voice_id, settings = voice_settings
+                # Apply character voice settings to TTS
+                self.tts.set_character_voice(
+                    voice_id=voice_id,
+                    stability=settings["stability"],
+                    similarity_boost=settings["similarity_boost"],
+                    style=settings.get("style"),
+                    use_speaker_boost=settings.get("use_speaker_boost", True),
+                )
+
         print("🔄 Synthesizing speech...")
 
         try:
             # Convert text to speech
             audio_data, provider_used, tts_duration_ms = self.tts.synthesize(
-                text=text, voice_id=voice_id
+                text=transformed_text, voice_id=voice_id
             )
 
             print(f"✅ Synthesized ({provider_used.value})")
@@ -206,7 +238,7 @@ class VoiceOutputManager:
 
             # Queue response in session
             self.session.queue_response(
-                text=text, timestamp=response_timestamp, character_transformed=False
+                text=transformed_text, timestamp=response_timestamp, character_transformed=character_transformed
             )
 
         except Exception as e:

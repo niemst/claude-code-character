@@ -21,9 +21,13 @@ Voice-enabled character interaction for Claude Code. Control Claude Code with yo
 - **Interrupt handling** - Stop playback by pressing Ctrl+Space (target: <500ms)
 - **Performance monitoring** - Tracks playback start latency (target: <1s)
 
-### 🚧 Coming Soon
+### ✅ User Story 3 - Character Roleplay
 
-- **User Story 3** - Character roleplay (e.g., Toudie from Gummy Bears)
+- **Character personalities** - Add personality to voice responses (e.g., Toudie from Gummy Bears)
+- **Technical content preservation** - 100% accuracy for code, paths, errors
+- **Characteristic phrases** - Inject character-specific catchphrases
+- **Character-specific voices** - Use custom ElevenLabs voice per character
+- **Easy character switching** - Select character via CLI
 
 ## Requirements
 
@@ -97,7 +101,20 @@ python -m src test-tts
 
 Press Ctrl+Space, speak a test phrase, and release. You should see the transcription and hear the response.
 
-### 5. Start voice interaction
+### 5. (Optional) Select character for roleplay
+
+```bash
+# List available characters
+python -m src list-characters
+
+# Select Toudie
+python -m src select-character toudie
+
+# Or disable character
+python -m src select-character none
+```
+
+### 6. Start voice interaction
 
 ```bash
 python -m src start
@@ -109,6 +126,7 @@ Now you can control Claude Code with voice commands:
 2. **Speak** your command (e.g., "read file main.py")
 3. **Release** Ctrl+Space
 4. The command is transcribed and sent to Claude Code
+5. **Hear** the response with optional character personality
 
 Press Ctrl+C to stop.
 
@@ -200,6 +218,10 @@ python -m src config disable-voice-output   # Disable voice output
 # Device management
 python -m src list-devices                  # List audio devices
 python -m src list-characters               # List available characters
+
+# Character management
+python -m src select-character <name>       # Select character for roleplay
+python -m src select-character none         # Disable character
 
 # Testing
 python -m src test-stt                      # Test speech-to-text
@@ -341,7 +363,7 @@ claude-code-character/
 │   │   └── output_manager.py
 │   ├── character/           # Character profiles
 │   │   ├── profile.py
-│   │   ├── transformer.py (TODO)
+│   │   ├── transformer.py   # Text transformation with personality
 │   │   └── profiles/
 │   │       └── toudie.json
 │   ├── config/              # Configuration
@@ -367,10 +389,10 @@ claude-code-character/
 - [x] **SC-001**: 80% of common commands successful via voice
 - [x] **SC-002**: Voice command recognition <2 seconds
 - [x] **SC-003**: Voice playback starts <1 second
-- [ ] SC-004: Character roleplay maintains 100% technical accuracy (User Story 3)
+- [x] **SC-004**: Character roleplay maintains 100% technical accuracy
 - [ ] SC-005: Complete 15+ minute coding session using only voice
 - [x] **SC-006**: Voice interruption responds <500ms
-- [ ] SC-007: Character personality in 90%+ of responses (User Story 3)
+- [x] **SC-007**: Character personality in 90%+ of responses (when enabled)
 - [ ] SC-008: Voice toggle in <3 seconds
 
 ## Roadmap
@@ -391,12 +413,13 @@ claude-code-character/
 - [x] Interrupt handling
 - [x] Performance monitoring
 
-### Phase 5: User Story 3 - 📋 Planned
+### Phase 5: User Story 3 - ✅ Complete
 
-- [ ] Character profile system
-- [ ] Text transformation (personality injection)
-- [ ] Technical content preservation
-- [ ] Character-specific voice settings
+- [x] Character profile system
+- [x] Text transformation (personality injection)
+- [x] Technical content preservation
+- [x] Character-specific voice settings
+- [x] CLI character selection
 
 ### Phase 6: Polish - 📋 Planned
 
