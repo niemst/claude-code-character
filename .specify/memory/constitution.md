@@ -1,27 +1,37 @@
 <!--
 Sync Impact Report
 ==================
-Version Change: 1.1.3
+Version Change: 1.2.0
 Constitution Type: Default template for SpecKit users
 Ratification: 2025-11-01
 Last Amendment: 2025-11-01
 
-Amendment Summary (v1.1.3 - Commit Policy):
-- Added commit message requirements to Principle II
+Amendment Summary (v1.2.0 - Coding Agent Instructions):
+- Added new "Coding Agent Instructions" section with coding standards
+- Added logging requirements (use logging module, not print)
+- Added mandatory exception logging with exc_info=True for stack traces
+- Added output formatting prohibition (no emojis/icons in code, commits, docs)
+- Moved commit message standards from Principle II to Coding Agent Instructions
+- Enhanced commit message examples and prohibitions
 
 Current Principle Structure:
 - I. Simplicity & Code Quality (NON-NEGOTIABLE) - YAGNI/KISS unified + SOLID/CLEAN CODE/DRY
-- II. Language & Communication Policy - Polish responses (concise), English docs/code, commit rules
+- II. Language & Communication Policy - Polish responses (concise), English docs/code, Python requirements
+- Coding Agent Instructions - Logging standards, no emojis, commit message standards
 - III. Incremental Delivery - MVP-first approach
 - IV. Specification-First - Complete spec before implementation
 - V. Independent Testability - Isolated testing requirements
 - VI. Documentation Completeness - Cross-artifact consistency
 
 Key Changes:
-- Commit messages: No AI attribution, focus on code, justification not description
+- Logging: Mandatory use of logging module instead of print statements
+- Exception Logging: Mandatory exc_info=True for all exception logs to include stack traces
+- Output Formatting: Absolute prohibition of emojis/icons in code, commits, and official docs
+- Commit Standards: Consolidated and enhanced with examples, moved to dedicated section
+- Print statements only allowed in CLI entry points for user output
 
 Templates Requiring Updates:
-✅ All templates - commit policy is procedural, no template changes needed
+✅ All templates - coding standards are procedural, no template changes needed
 
 Follow-up TODOs:
 - None
@@ -90,14 +100,53 @@ Follow-up TODOs:
 - Use snake_case for variables, functions, and module names (Python convention)
 - Use PascalCase for class names (Python convention)
 
-**Commit Message Requirements**:
-- All commit messages MUST be in English
-- Absolute prohibition of meta-references: No "Co-authored-by: Claude", "Generated with Claude Code", or similar AI attribution
-- Commit messages MUST focus exclusively on code changes
-- Format: First line summary, two blank lines, then brief justification (WHY, not WHAT)
-- Justification explains reasoning for changes, not description of changes
-
 **Rationale**: Polish communication enables natural interaction with users and is the most precise language for work with coding agents, while English documentation and code maintain international standards, enable global collaboration, and leverage universal programming conventions. Concise communication respects user time and reduces noise.
+
+## Coding Agent Instructions
+
+### General Coding Standards
+
+**Logging Requirements**:
+- MUST use proper logging module instead of print statements
+- Configure logging with appropriate levels (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+- Use structured logging with meaningful context
+- Print statements are ONLY allowed in CLI entry points that output to users
+- **Exception logging**: MUST log exceptions with `exc_info=True` to include stack traces
+  - Example: `logger.error("Operation failed", exc_info=True)`
+  - Alternative: `logger.exception("Operation failed")` (automatically includes exc_info)
+  - Never log exceptions without stack trace context
+
+**Output Formatting** (NON-NEGOTIABLE):
+- **Absolute prohibition**: No emojis or icons in production code
+- **Absolute prohibition**: No emojis or icons in commit messages
+- **Absolute prohibition**: No emojis or icons in official documentation (spec.md, plan.md, tasks.md, README, API docs)
+- **Only permitted exceptions**: User-facing UI/UX where emojis are part of the product specification (requires explicit justification)
+- **Rationale**: Emojis introduce encoding issues, reduce professionalism, create accessibility problems, and clutter version control history. Code and documentation must be universally readable and maintainable.
+
+### Commit Message Standards
+
+**Format Requirements**:
+- All commit messages MUST be in English
+- First line: Brief summary in imperative mood (50 chars max)
+- Two blank lines after the summary
+- Body: Brief justification explaining WHY, not WHAT
+- Focus exclusively on code changes and their rationale
+- Keep short and concise
+
+**Prohibited Content**:
+- **Absolute prohibition**: No meta-references to AI tools
+- No "Co-authored-by: Claude" or similar AI attribution
+- No "Generated with Claude Code" or similar tool references
+- No emojis or decorative icons
+- No unnecessary verbosity or filler text
+
+**Example**:
+```
+Add environment variable support for API keys
+
+
+Enables users to override API keys via OPENAI_API_KEY and ELEVENLABS_API_KEY environment variables, improving security by avoiding hardcoded credentials in config files.
+```
 
 ### III. Incremental Delivery
 
@@ -237,4 +286,4 @@ Follow-up TODOs:
 - Each project using SpecKit may customize this constitution to fit their needs
 - Customizations should increment version and document changes in Sync Impact Report
 
-**Version**: 1.1.3 | **Ratified**: 2025-11-01 | **Last Amended**: 2025-11-01
+**Version**: 1.2.0 | **Ratified**: 2025-11-01 | **Last Amended**: 2025-11-01
