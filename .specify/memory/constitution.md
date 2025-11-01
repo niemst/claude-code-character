@@ -82,6 +82,14 @@ Follow-up TODOs:
 - Configuration files and technical documentation MUST be in English
 - No mixing of Polish and English within code (e.g., no Polish variable names)
 
+**Programming Language Requirements**:
+- All implementation code MUST be written in Python 3.11 or higher
+- Python is the mandatory programming language for this project
+- Follow PEP 8 style guide for Python code
+- Use type hints (PEP 484) for all function signatures
+- Use snake_case for variables, functions, and module names (Python convention)
+- Use PascalCase for class names (Python convention)
+
 **Commit Message Requirements**:
 - All commit messages MUST be in English
 - Absolute prohibition of meta-references: No "Co-authored-by: Claude", "Generated with Claude Code", or similar AI attribution
