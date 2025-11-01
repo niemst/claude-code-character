@@ -43,15 +43,15 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T010 Define VoiceConfiguration dataclass in src/config/voice_config.py with type hints
-- [ ] T011 Implement configuration loader in src/config/persistence.py (load from ~/.claude-code/voice-config.json)
-- [ ] T012 Implement configuration saver in src/config/persistence.py (save to ~/.claude-code/voice-config.json with chmod 600)
-- [ ] T013 Create default configuration factory in src/config/voice_config.py (returns VoiceConfiguration with sensible defaults)
-- [ ] T014 [P] Define CharacterProfile dataclass in src/character/profile.py with validation
-- [ ] T015 [P] Implement character profile loader in src/character/profile.py (load from src/character/profiles/*.json)
-- [ ] T016 Create Toudie character profile JSON in src/character/profiles/toudie.json (with voiceId, systemPrompt, phrases per data-model.md)
-- [ ] T017 [P] Define VoiceSession dataclass in src/voice/voice_session.py for runtime state
-- [ ] T018 [P] Implement audio device enumeration in src/audio/device_manager.py (list available input/output devices)
+- [x] T010 Define VoiceConfiguration dataclass in src/config/voice_config.py with type hints
+- [x] T011 Implement configuration loader in src/config/persistence.py (load from ~/.claude-code/voice-config.json)
+- [x] T012 Implement configuration saver in src/config/persistence.py (save to ~/.claude-code/voice-config.json with chmod 600)
+- [x] T013 Create default configuration factory in src/config/voice_config.py (returns VoiceConfiguration with sensible defaults)
+- [x] T014 [P] Define CharacterProfile dataclass in src/character/profile.py with validation
+- [x] T015 [P] Implement character profile loader in src/character/profile.py (load from src/character/profiles/*.json)
+- [x] T016 Create Toudie character profile JSON in src/character/profiles/toudie.json (with voiceId, systemPrompt, phrases per data-model.md)
+- [x] T017 [P] Define VoiceSession dataclass in src/voice/voice_session.py for runtime state
+- [x] T018 [P] Implement audio device enumeration in src/audio/device_manager.py (list available input/output devices)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -65,19 +65,19 @@
 
 ### Implementation for User Story 1
 
-- [ ] T019 [P] [US1] Implement push-to-talk hotkey listener in src/audio/capture.py using pynput (monitor Ctrl+Space by default)
-- [ ] T020 [P] [US1] Implement audio capture start/stop in src/audio/capture.py using PyAudio or sounddevice
-- [ ] T021 [US1] Implement audio recording to in-memory buffer in src/audio/capture.py (capture while push-to-talk active)
-- [ ] T022 [P] [US1] Implement Web Speech API STT integration in src/voice/speech_to_text.py using SpeechRecognition library
-- [ ] T023 [P] [US1] Implement Whisper API fallback STT in src/voice/speech_to_text.py (use if Web Speech fails or configured)
-- [ ] T024 [US1] Implement STT provider selection logic in src/voice/speech_to_text.py (check config, fallback chain)
-- [ ] T025 [US1] Create voice session manager in src/voice/voice_session.py (track isListening state, lastCommand statistics)
-- [ ] T026 [US1] Implement push-to-talk press handler in src/audio/capture.py (set isListening=True, start recording)
-- [ ] T027 [US1] Implement push-to-talk release handler in src/audio/capture.py (set isListening=False, trigger STT)
-- [ ] T028 [US1] Implement input hook in src/hooks/input_hook.py (send transcribed text to Claude Code command processor)
-- [ ] T029 [US1] Add visual feedback for push-to-talk active state in src/audio/capture.py (print to console or status indicator)
-- [ ] T030 [US1] Add error handling for STT failures in src/voice/speech_to_text.py (timeout, network errors, unclear audio)
-- [ ] T031 [US1] Add performance monitoring in src/voice/voice_session.py (track transcription duration for SC-002 validation)
+- [x] T019 [P] [US1] Implement push-to-talk hotkey listener in src/audio/capture.py using pynput (monitor Ctrl+Space by default)
+- [x] T020 [P] [US1] Implement audio capture start/stop in src/audio/capture.py using PyAudio or sounddevice
+- [x] T021 [US1] Implement audio recording to in-memory buffer in src/audio/capture.py (capture while push-to-talk active)
+- [x] T022 [P] [US1] Implement Web Speech API STT integration in src/voice/speech_to_text.py using SpeechRecognition library
+- [x] T023 [P] [US1] Implement Whisper API fallback STT in src/voice/speech_to_text.py (use if Web Speech fails or configured)
+- [x] T024 [US1] Implement STT provider selection logic in src/voice/speech_to_text.py (check config, fallback chain)
+- [x] T025 [US1] Create voice session manager in src/voice/voice_session.py (track isListening state, lastCommand statistics)
+- [x] T026 [US1] Implement push-to-talk press handler in src/audio/capture.py (set isListening=True, start recording)
+- [x] T027 [US1] Implement push-to-talk release handler in src/audio/capture.py (set isListening=False, trigger STT)
+- [x] T028 [US1] Implement input hook in src/hooks/input_hook.py (send transcribed text to Claude Code command processor)
+- [x] T029 [US1] Add visual feedback for push-to-talk active state in src/audio/capture.py (print to console or status indicator)
+- [x] T030 [US1] Add error handling for STT failures in src/voice/speech_to_text.py (timeout, network errors, unclear audio)
+- [x] T031 [US1] Add performance monitoring in src/voice/voice_session.py (track transcription duration for SC-002 validation)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - user can issue voice commands that Claude Code executes
 
