@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "SlashCommand(/speckit.tasks)",
+      "Bash(pwsh:*)",
+      "Bash(python -m black:*)",
+      "Bash(python -m ruff check:*)"
+    ],
+    "ask": [],
+    "deny": []
+  }
+}
