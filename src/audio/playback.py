@@ -1,12 +1,15 @@
 """Audio playback with streaming and interrupt support."""
 
 import io
+import logging
 import threading
 import time
 import wave
 from collections.abc import Callable, Iterator
 
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 try:
     import sounddevice as sd
@@ -132,8 +135,8 @@ class AudioPlayer:
                     # Try to decode as MP3
                     audio_array = self._decode_mp3_chunk(chunk)
                     self._stream.write(audio_array)
-                except Exception as e:
-                    print(f"Warning: Failed to decode audio chunk: {e}")
+                except Exception:
+                    logger.warning("Failed to decode audio chunk", exc_info=True)
                     continue
 
         except Exception as e:
@@ -373,7 +376,7 @@ class PlaybackController:
         self._controller_thread = threading.Thread(target=self._controller_loop, daemon=True)
         self._controller_thread.start()
 
-        print("✅ Playback controller started")
+        logger.info("Playback controller started")
 
     def stop(self) -> None:
         """Stop playback controller."""
@@ -390,7 +393,7 @@ class PlaybackController:
             self._controller_thread.join(timeout=2.0)
 
         self._is_active = False
-        print("✅ Playback controller stopped")
+        logger.info("Playback controller stopped")
 
     def queue_audio(self, audio_data: bytes, audio_format: str = "auto") -> None:
         """
@@ -439,8 +442,8 @@ class PlaybackController:
                 try:
                     # Play audio
                     self.player.play(audio_data, audio_format)
-                except Exception as e:
-                    print(f"❌ Playback error: {e}")
+                except Exception:
+                    logger.error("Playback error", exc_info=True)
 
             else:
                 # Queue empty

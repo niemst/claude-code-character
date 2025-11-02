@@ -1,5 +1,9 @@
 """Audio device enumeration and management."""
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 try:
     import sounddevice as sd
 
@@ -17,9 +21,8 @@ def list_audio_devices() -> list[tuple[int, str, str]]:
         device_type is either 'input', 'output', or 'both'
     """
     if not SOUNDDEVICE_AVAILABLE:
-        print("⚠️  sounddevice library not available")
-        print("    Install with: uv pip install sounddevice")
-        print("    Or: pip install sounddevice")
+        logger.warning("sounddevice library not available")
+        logger.info("Install with: uv pip install sounddevice or pip install sounddevice")
         return []
 
     devices = []
@@ -40,12 +43,13 @@ def list_audio_devices() -> list[tuple[int, str, str]]:
                 continue  # Skip devices with no channels
 
             devices.append((idx, device_name, device_type))
-    except Exception as e:
-        print(f"❌ Error enumerating audio devices: {e}")
-        print("   Possible causes:")
-        print("   - No audio devices connected")
-        print("   - Audio driver issues")
-        print("   - PortAudio not installed (Linux: sudo apt-get install portaudio19-dev)")
+    except Exception:
+        logger.error(
+            "Error enumerating audio devices. Possible causes: "
+            "No audio devices connected, audio driver issues, "
+            "PortAudio not installed (Linux: sudo apt-get install portaudio19-dev)",
+            exc_info=True,
+        )
 
     return devices
 
@@ -65,8 +69,8 @@ def get_default_input_device() -> tuple[int, str] | None:
         device_id = sd.default.device[0]
         device_name = default_device["name"]
         return (device_id, device_name)
-    except Exception as e:
-        print(f"Error getting default input device: {e}")
+    except Exception:
+        logger.error("Error getting default input device", exc_info=True)
         return None
 
 
@@ -85,8 +89,8 @@ def get_default_output_device() -> tuple[int, str] | None:
         device_id = sd.default.device[1]
         device_name = default_device["name"]
         return (device_id, device_name)
-    except Exception as e:
-        print(f"Error getting default output device: {e}")
+    except Exception:
+        logger.error("Error getting default output device", exc_info=True)
         return None
 
 

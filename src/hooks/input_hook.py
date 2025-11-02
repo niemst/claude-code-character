@@ -1,6 +1,9 @@
 """Input hook for sending voice commands to Claude Code."""
 
+import logging
 import sys
+
+logger = logging.getLogger(__name__)
 
 
 class ClaudeCodeInputHook:
@@ -30,7 +33,7 @@ class ClaudeCodeInputHook:
         """
         if not command_text or not command_text.strip():
             if self.debug:
-                print("⚠️  Empty command, skipping")
+                logger.debug("Empty command, skipping")
             return
 
         self._command_count += 1
@@ -39,8 +42,8 @@ class ClaudeCodeInputHook:
         formatted_command = command_text.strip()
 
         if self.debug:
-            print(
-                f'📤 Sending command #{self._command_count} to Claude Code: "{formatted_command}"'
+            logger.debug(
+                'Sending command #%d to Claude Code: "%s"', self._command_count, formatted_command
             )
 
         # Send to Claude Code via stdout in a special format

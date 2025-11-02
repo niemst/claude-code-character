@@ -1,10 +1,13 @@
 """Audio capture with push-to-talk hotkey support."""
 
+import logging
 import threading
 from collections.abc import Callable
 
 import numpy as np
 from pynput import keyboard
+
+logger = logging.getLogger(__name__)
 
 try:
     import sounddevice as sd
@@ -114,7 +117,7 @@ class AudioCapture:
             status: Stream status flags
         """
         if status:
-            print(f"Audio capture status: {status}")
+            logger.warning("Audio capture status: %s", status)
 
         if self._is_recording:
             # Copy audio data to buffer
@@ -170,7 +173,7 @@ class PushToTalkListener:
         self._listener.start()
         self._is_active = True
 
-        print(f"Push-to-talk listener started (hotkey: {self.hotkey})")
+        logger.info("Push-to-talk listener started (hotkey: %s)", self.hotkey)
 
     def stop(self) -> None:
         """Stop listening for hotkey."""
@@ -182,7 +185,7 @@ class PushToTalkListener:
             self._listener = None
 
         self._is_active = False
-        print("Push-to-talk listener stopped")
+        logger.info("Push-to-talk listener stopped")
 
     def _parse_hotkey(self, hotkey: str) -> str:
         """
@@ -288,7 +291,7 @@ class PushToTalkHandler:
         self._keyboard_listener.start()
         self._is_active = True
 
-        print(f"Push-to-talk handler started (hotkey: {self.hotkey})")
+        logger.info("Push-to-talk handler started (hotkey: %s)", self.hotkey)
 
     def stop(self) -> None:
         """Stop push-to-talk handler."""
@@ -305,7 +308,7 @@ class PushToTalkHandler:
             self.audio_capture.stop_recording()
 
         self._is_active = False
-        print("Push-to-talk handler stopped")
+        logger.info("Push-to-talk handler stopped")
 
     def _on_key_press(self, key: keyboard.Key | keyboard.KeyCode) -> None:
         """Handle key press events."""
@@ -316,9 +319,8 @@ class PushToTalkHandler:
             self._space_pressed = True
 
         # Check if hotkey combination is pressed
-        if self._ctrl_pressed and self._space_pressed:
-            if not self.audio_capture.is_recording:
-                self.audio_capture.start_recording()
+        if self._ctrl_pressed and self._space_pressed and not self.audio_capture.is_recording:
+            self.audio_capture.start_recording()
 
     def _on_key_release(self, key: keyboard.Key | keyboard.KeyCode) -> None:
         """Handle key release events."""
@@ -329,13 +331,12 @@ class PushToTalkHandler:
             self._space_pressed = False
 
         # Check if hotkey combination is released
-        if not (self._ctrl_pressed and self._space_pressed):
-            if self.audio_capture.is_recording:
-                self.audio_capture.stop_recording()
+        if not (self._ctrl_pressed and self._space_pressed) and self.audio_capture.is_recording:
+            self.audio_capture.stop_recording()
 
     def _on_recording_start(self) -> None:
         """Callback when recording starts."""
-        print("🎤 Recording started...")
+        logger.info("Recording started")
 
     def _on_recording_stop(self, audio_data: np.ndarray, sample_rate: int) -> None:
         """
@@ -345,7 +346,7 @@ class PushToTalkHandler:
             audio_data: Recorded audio samples
             sample_rate: Audio sample rate
         """
-        print("🎤 Recording stopped")
+        logger.info("Recording stopped")
 
         # Call user callback
         if self.on_audio_captured:

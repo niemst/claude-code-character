@@ -1,8 +1,11 @@
 """Text-to-speech synthesis with multiple provider support."""
 
+import logging
 import time
 from collections.abc import Generator
 from enum import Enum
+
+logger = logging.getLogger(__name__)
 
 try:
     import pyttsx3
@@ -12,7 +15,7 @@ except ImportError:
     PYTTSX3_AVAILABLE = False
 
 try:
-    from elevenlabs import VoiceSettings, generate, stream
+    from elevenlabs import VoiceSettings, generate
     from elevenlabs.client import ElevenLabs
 
     ELEVENLABS_AVAILABLE = True
@@ -359,7 +362,7 @@ class TextToSpeech:
 
             except (TtsNetworkError, TtsApiError, TtsError) as e:
                 last_error = e
-                print(f"⚠️  {provider.value} failed: {e}, trying next provider...")
+                logger.warning("%s failed: %s, trying next provider", provider.value, e)
                 continue
 
         # All providers failed

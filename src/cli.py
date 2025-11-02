@@ -21,7 +21,7 @@ def cmd_start(args: argparse.Namespace) -> int:
     Returns:
         Exit code
     """
-    print("🎙️  Claude Code Voice Character Interaction\n")
+    print("Claude Code Voice Character Interaction\n")
 
     # Create voice interaction manager
     manager = create_voice_interaction_manager(on_command=send_voice_command)
@@ -93,14 +93,14 @@ def cmd_config_init(args: argparse.Namespace) -> int:
     config_path = get_config_path()
 
     if config_path.exists() and not args.force:
-        print(f"⚠️  Configuration already exists: {config_path}")
+        print(f"Configuration already exists: {config_path}")
         print("Use --force to overwrite")
         return 1
 
     config = create_default_config()
     save_config(config)
 
-    print(f"✅ Created default configuration: {config_path}")
+    print(f"Created default configuration: {config_path}")
     return 0
 
 
@@ -117,7 +117,7 @@ def cmd_config_enable_voice_input(args: argparse.Namespace) -> int:
     config = load_config()
     config.voice_input_enabled = True
     save_config(config)
-    print("✅ Voice input enabled")
+    print("Voice input enabled")
     return 0
 
 
@@ -134,7 +134,7 @@ def cmd_config_disable_voice_input(args: argparse.Namespace) -> int:
     config = load_config()
     config.voice_input_enabled = False
     save_config(config)
-    print("✅ Voice input disabled")
+    print("Voice input disabled")
     return 0
 
 
@@ -151,7 +151,7 @@ def cmd_config_enable_voice_output(args: argparse.Namespace) -> int:
     config = load_config()
     config.voice_output_enabled = True
     save_config(config)
-    print("✅ Voice output enabled")
+    print("Voice output enabled")
     return 0
 
 
@@ -168,7 +168,7 @@ def cmd_config_disable_voice_output(args: argparse.Namespace) -> int:
     config = load_config()
     config.voice_output_enabled = False
     save_config(config)
-    print("✅ Voice output disabled")
+    print("Voice output disabled")
     return 0
 
 
@@ -231,13 +231,13 @@ def cmd_select_character(args: argparse.Namespace) -> int:
         config = load_config()
         config.selected_character = None
         save_config(config)
-        print("✅ Character disabled")
+        print("Character disabled")
         return 0
 
     # Validate character exists
     profiles = load_all_character_profiles()
     if character_name not in profiles:
-        print(f"❌ Character '{character_name}' not found")
+        print(f"Character '{character_name}' not found")
         print("\nAvailable characters:")
         for name in profiles:
             print(f"  - {name}")
@@ -249,7 +249,7 @@ def cmd_select_character(args: argparse.Namespace) -> int:
     save_config(config)
 
     profile = profiles[character_name]
-    print(f"✅ Selected character: {profile.display_name}")
+    print(f"Selected character: {profile.display_name}")
     print(f"   Description: {profile.description}")
     print(f"   Voice ID: {profile.voice_id}")
     return 0
@@ -265,14 +265,14 @@ def cmd_test_stt(args: argparse.Namespace) -> int:
     Returns:
         Exit code
     """
-    print("🎤 Testing speech-to-text...")
+    print("Testing speech-to-text...")
     print("Press Ctrl+Space and speak, then release to transcribe\n")
 
     transcription = []
 
     def on_command(text: str) -> None:
         transcription.append(text)
-        print(f'\n✅ Transcription: "{text}"\n')
+        print(f'\nTranscription: "{text}"\n')
 
     manager = create_voice_interaction_manager(on_command=on_command)
     manager.start()
@@ -306,7 +306,7 @@ def cmd_test_tts(args: argparse.Namespace) -> int:
     """
     from src.voice.output_manager import create_voice_output_manager
 
-    print("🔊 Testing text-to-speech...\n")
+    print("Testing text-to-speech...\n")
 
     # Create output manager
     manager = create_voice_output_manager()
@@ -329,7 +329,7 @@ def cmd_test_tts(args: argparse.Namespace) -> int:
 
             time.sleep(5)
 
-        print("\n✅ TTS test completed")
+        print("\nTTS test completed")
         return 0
 
     except KeyboardInterrupt:
@@ -368,18 +368,10 @@ def main() -> int:
         "--force", action="store_true", help="Overwrite existing configuration"
     )
 
-    config_subparsers.add_parser(
-        "enable-voice-input", help="Enable voice input"
-    )
-    config_subparsers.add_parser(
-        "disable-voice-input", help="Disable voice input"
-    )
-    config_subparsers.add_parser(
-        "enable-voice-output", help="Enable voice output"
-    )
-    config_subparsers.add_parser(
-        "disable-voice-output", help="Disable voice output"
-    )
+    config_subparsers.add_parser("enable-voice-input", help="Enable voice input")
+    config_subparsers.add_parser("disable-voice-input", help="Disable voice input")
+    config_subparsers.add_parser("enable-voice-output", help="Enable voice output")
+    config_subparsers.add_parser("disable-voice-output", help="Disable voice output")
 
     # List commands
     subparsers.add_parser("list-devices", help="List audio devices")

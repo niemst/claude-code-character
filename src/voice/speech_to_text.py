@@ -1,10 +1,13 @@
 """Speech-to-text transcription with multiple provider support."""
 
 import io
+import logging
 import time
 from enum import Enum
 
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 try:
     import speech_recognition as sr
@@ -246,7 +249,7 @@ class SpeechToText:
                 raise
             except (SttTimeoutError, SttNetworkError, SttError) as e:
                 last_error = e
-                print(f"⚠️  {provider.value} failed: {e}, trying next provider...")
+                logger.warning("%s failed: %s, trying next provider", provider.value, e)
                 continue
 
         # All providers failed

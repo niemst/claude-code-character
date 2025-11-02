@@ -1,11 +1,14 @@
 """Character personality transformation for voice responses."""
 
+import logging
 import random
 import re
 
 from src.character.profile import CharacterProfile, load_all_character_profiles
 from src.config.persistence import load_config
 from src.config.voice_config import VoiceConfiguration
+
+logger = logging.getLogger(__name__)
 
 
 class TechnicalContentProtector:
@@ -273,7 +276,7 @@ class CharacterTransformer:
             self.character_profile = character_profile
             self._is_active = True
         else:
-            print(f"⚠️  Character '{character_name}' not found")
+            logger.warning("Character '%s' not found", character_name)
 
     def get_voice_settings(self) -> tuple[str, dict] | None:
         """
