@@ -7,7 +7,7 @@
 
 ## Summary
 
-Enable Claude Code to interact with users through voice commands and voice responses, with optional character roleplay (e.g., Toudie from Gummy Bears) applied to spoken output only. The feature works out-of-the-box using free system services (Web Speech API for STT, system TTS) with optional premium upgrade to ElevenLabs for superior voice quality. Uses push-to-talk activation for voice input, converts speech to text for command execution, and converts Claude Code responses to speech output with character personality overlay while maintaining 100% technical accuracy in actual work execution.
+Enable Claude Code to interact with users through voice commands and voice responses, with optional character roleplay (e.g., Toadwart from Gummy Bears) applied to spoken output only. The feature works out-of-the-box using free system services (Web Speech API for STT, system TTS) with optional premium upgrade to ElevenLabs for superior voice quality. Uses push-to-talk activation for voice input, converts speech to text for command execution, and converts Claude Code responses to speech output with character personality overlay while maintaining 100% technical accuracy in actual work execution.
 
 **Key Feature**: Zero-configuration experience - no API keys required for basic functionality. Users can optionally add ElevenLabs API key to upgrade voice quality.
 
@@ -15,7 +15,7 @@ Enable Claude Code to interact with users through voice commands and voice respo
 
 **Language/Version**: Python 3.11+ (project requirement)
 **Primary Dependencies**: `SpeechRecognition` (STT with multiple backends), `pyttsx3` (system TTS), `elevenlabs` (premium TTS), `pynput` (global hotkey for push-to-talk), `PyAudio`/`sounddevice` (audio I/O), Optional: `openai` (Whisper API as STT fallback)
-**Storage**: JSON configuration files (`~/.claude-code/voice-config.json` for user preferences, `src/character/profiles/*.json` for character definitions)
+**Storage**: JSON configuration files (`.claude/voice-config.json` in project root for user preferences, `src/character/profiles/*.json` for character definitions)
 **Testing**: pytest with pytest-asyncio
 **Target Platform**: Windows, macOS, Linux (cross-platform desktop environment where Claude Code runs)
 **Project Type**: Single project (CLI extension/hook system for Claude Code)
@@ -174,7 +174,7 @@ src/
 │   ├── profile.py          # Character profile definitions
 │   ├── transformer.py      # Apply character personality to text
 │   └── profiles/           # Character profile data files
-│       └── toudie.json     # Toudie character profile
+│       └── toadwart.json     # Toadwart character profile
 ├── config/
 │   ├── __init__.py
 │   ├── voice_config.py     # Voice configuration management

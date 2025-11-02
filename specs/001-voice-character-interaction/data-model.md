@@ -14,7 +14,7 @@ This document defines the data structures for voice configuration, character pro
 
 **Purpose**: User preferences for voice input/output settings
 
-**Storage Location**: `~/.claude-code/voice-config.json`
+**Storage Location**: `.claude/voice-config.json` (project root)
 
 **Schema**:
 
@@ -124,12 +124,12 @@ interface CharacterProfile {
 | `transformationRules.useCharacteristicPhrases` | boolean | Whether to inject characteristic phrases | None |
 | `transformationRules.preserveTechnicalContent` | boolean | MUST be true: preserve code, paths, errors verbatim | Must be `true` (enforced) |
 
-**Example - Toudie Profile**:
+**Example - Toadwart Profile**:
 
 ```json
 {
-  "name": "toudie",
-  "displayName": "Toudie from Gummy Bears",
+  "name": "toadwart",
+  "displayName": "Toadwart from Gummy Bears",
   "description": "Cheerful, helpful Gummi Bear from Gummi Glen. Enthusiastic and occasionally references Gummi Berry juice or adventures.",
   "voiceId": "21m00Tcm4TlvDq8ikWAM",
   "voiceSettings": {
@@ -138,7 +138,7 @@ interface CharacterProfile {
     "style": 0.6,
     "useSpeakerBoost": true
   },
-  "systemPrompt": "Transform responses to sound like Toudie from Gummy Bears: cheerful, helpful, occasionally references Gummi Berry juice or adventures. Add personality but keep all technical content (code, file paths, error messages) completely intact and unchanged.",
+  "systemPrompt": "Transform responses to sound like Toadwart from Gummy Bears: cheerful, helpful, occasionally references Gummi Berry juice or adventures. Add personality but keep all technical content (code, file paths, error messages) completely intact and unchanged.",
   "characteristicPhrases": [
     "Great gobs of gummiberries!",
     "Bouncing bears!",
@@ -278,14 +278,14 @@ interface VoiceSession {
 
 ## Example Data Flow
 
-### User Issues Voice Command with Toudie Character Active
+### User Issues Voice Command with Toadwart Character Active
 
 1. **Configuration Loaded**:
    ```json
    {
      "voiceInputEnabled": true,
      "voiceOutputEnabled": true,
-     "selectedCharacter": "toudie",
+     "selectedCharacter": "toadwart",
      "pushToTalkKey": "Ctrl+Space",
      "apiKeys": {
        "openai": "sk-...",
@@ -297,7 +297,7 @@ interface VoiceSession {
 2. **Character Profile Loaded**:
    ```json
    {
-     "name": "toudie",
+     "name": "toadwart",
      "voiceId": "21m00Tcm4TlvDq8ikWAM",
      "voiceSettings": {
        "stability": 0.5,
@@ -355,7 +355,7 @@ Note: Actual technical content ("main.ts", "247 lines", "TypeScript code") prese
 
 ## Storage and Persistence
 
-### User Configuration (`~/.claude-code/voice-config.json`)
+### User Configuration (`.claude/voice-config.json`)
 - **Created**: On first voice feature enable
 - **Updated**: Whenever user changes settings
 - **Format**: Pretty-printed JSON (human-readable)

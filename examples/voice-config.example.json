@@ -13,7 +13,7 @@
     "tts_streaming_enabled": true
   },
   "push_to_talk_key": "Ctrl+Space",
-  "selected_character": "toudie",
+  "selected_character": "toadwart",
   "stt_config": {
     "whisper_model": "whisper-1"
   },

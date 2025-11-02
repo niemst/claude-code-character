@@ -3,7 +3,7 @@
 **Feature Branch**: `001-voice-character-interaction`
 **Created**: 2025-11-01
 **Status**: Draft
-**Input**: User description: "chce ustawic tak claude code (hooki itp) zeby glosowo rozmawial z uzytkownikiem i pozwala na sluchania polecen glosowych od uuzytkownika. Ale istotne jest to by w czasie rozmowy przyjmowal role w mowieniu (i wylacznie w formie mowienia, ale juz nie wykonywanej pracy) jako przykladowa postac uzyjmy Toudiego z Gumisiow"
+**Input**: User description: "chce ustawic tak claude code (hooki itp) zeby glosowo rozmawial z uzytkownikiem i pozwala na sluchania polecen glosowych od uuzytkownika. Ale istotne jest to by w czasie rozmowy przyjmowal role w mowieniu (i wylacznie w formie mowienia, ale juz nie wykonywanej pracy) jako przykladowa postac uzyjmy Toadwartgo z Gumisiow"
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -44,16 +44,16 @@ As a developer, I want to hear Claude Code's responses spoken aloud so that I ca
 
 ### User Story 3 - Character Roleplay for Voice Responses (Priority: P3)
 
-As a developer, I want Claude Code to speak in the voice/personality of a chosen character (e.g., Toudie from Gummy Bears) so that my coding sessions are more enjoyable and personalized while still receiving accurate technical assistance.
+As a developer, I want Claude Code to speak in the voice/personality of a chosen character (e.g., Toadwart from Gummy Bears) so that my coding sessions are more enjoyable and personalized while still receiving accurate technical assistance.
 
 **Why this priority**: This adds personality and engagement to the interaction but doesn't affect core functionality. The character roleplay applies only to how responses are spoken, not to the technical accuracy or quality of the work performed.
 
-**Independent Test**: Can be tested by configuring a character (e.g., Toudie), issuing any command, and verifying that the voice responses include character-appropriate expressions, tone, and mannerisms while the actual code work remains professional and accurate.
+**Independent Test**: Can be tested by configuring a character (e.g., Toadwart), issuing any command, and verifying that the voice responses include character-appropriate expressions, tone, and mannerisms while the actual code work remains professional and accurate.
 
 **Acceptance Scenarios**:
 
-1. **Given** character roleplay is configured for Toudie, **When** Claude Code provides a voice response, **Then** the spoken output includes character-appropriate phrases and personality
-2. **Given** character is set to Toudie, **When** Claude Code performs code analysis or file operations, **Then** the work itself remains professional and accurate (character applies only to speaking)
+1. **Given** character roleplay is configured for Toadwart, **When** Claude Code provides a voice response, **Then** the spoken output includes character-appropriate phrases and personality
+2. **Given** character is set to Toadwart, **When** Claude Code performs code analysis or file operations, **Then** the work itself remains professional and accurate (character applies only to speaking)
 3. **Given** character roleplay is active, **When** user requests technical information, **Then** the response is delivered in character voice but with complete technical accuracy
 4. **Given** character configuration exists, **When** user switches characters or disables roleplay, **Then** voice responses adjust immediately without affecting ongoing work
 
@@ -94,7 +94,7 @@ As a developer, I want Claude Code to speak in the voice/personality of a chosen
 ### Key Entities
 
 - **Voice Configuration**: User preferences for voice input/output settings, including enabled/disabled state, character selection, audio device selection, activation method
-- **Character Profile**: Definition of a character's speaking style, including personality traits, characteristic phrases, tone markers (e.g., Toudie: cheerful, helpful, uses Gummi Bears references)
+- **Character Profile**: Definition of a character's speaking style, including personality traits, characteristic phrases, tone markers (e.g., Toadwart: cheerful, helpful, uses Gummi Bears references)
 - **Voice Session**: Active voice interaction state, including current listening status, playback status, queue of pending responses
 
 ## Success Criteria *(mandatory)*
@@ -115,7 +115,7 @@ As a developer, I want Claude Code to speak in the voice/personality of a chosen
 - Users have functioning microphone and speakers/headphones available
 - Users are working in an environment where speaking aloud is acceptable
 - Standard speech-to-text and text-to-speech services can handle Polish language and mixed Polish/English technical terminology
-- Character roleplay (e.g., Toudie from Gummy Bears) can be implemented through prompt engineering and text-to-speech tone adjustments without requiring custom voice models
+- Character roleplay (e.g., Toadwart from Gummy Bears) can be implemented through prompt engineering and text-to-speech tone adjustments without requiring custom voice models
 - Voice activation can use standard operating system audio APIs
 - Users understand that character roleplay is cosmetic and doesn't affect the quality of technical work
 - Voice interaction is supplementary to text interaction, not a complete replacement
@@ -127,7 +127,7 @@ As a developer, I want Claude Code to speak in the voice/personality of a chosen
 - Text-to-speech service or API with configurable voice characteristics for character roleplay
 - Audio input/output APIs compatible with the user's operating system
 - Claude Code's hook system capable of intercepting and modifying input/output streams
-- Character personality definitions and guidelines (e.g., Toudie character traits, phrases, tone)
+- Character personality definitions and guidelines (e.g., Toadwart character traits, phrases, tone)
 
 ## Out of Scope
 

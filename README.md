@@ -23,7 +23,7 @@ Voice-enabled character interaction for Claude Code. Control Claude Code with yo
 
 ### User Story 3 - Character Roleplay
 
-- **Character personalities** - Add personality to voice responses (e.g., like Toudie from Gummy Bears)
+- **Character personalities** - Add personality to voice responses (e.g., Toadwart from Gummi Bears)
 - **Technical content preservation** - 100% accuracy for code, paths, errors
 - **Characteristic phrases** - Inject character-specific catchphrases
 - **Character-specific voices** - Use custom ElevenLabs voice per character
@@ -57,11 +57,11 @@ cd claude-code-character
 ### 3. Install dependencies
 
 ```bash
-# Install core dependencies (free, no API keys required)
-uv pip install -e .
+# Install all dependencies
+uv sync
 
 # Optional: Install premium features (requires API keys)
-uv pip install -e ".[premium]"
+uv sync --extra premium
 ```
 
 ## Quick Start
@@ -69,22 +69,22 @@ uv pip install -e ".[premium]"
 ### 1. Initialize configuration
 
 ```bash
-python -m src config init
+uv run python -m src config init
 ```
 
-This creates `~/.claude-code/voice-config.json` with default settings.
+This creates `.claude/voice-config.json` in the project root with default settings.
 
 ### 2. Enable voice input and output
 
 ```bash
-python -m src config enable-voice-input
-python -m src config enable-voice-output
+uv run python -m src config enable-voice-input
+uv run python -m src config enable-voice-output
 ```
 
 ### 3. Test your microphone and speakers
 
 ```bash
-python -m src list-devices
+uv run python -m src list-devices
 ```
 
 This shows all available audio devices. The default device is used automatically.
@@ -93,10 +93,10 @@ This shows all available audio devices. The default device is used automatically
 
 ```bash
 # Test STT (speech input)
-python -m src test-stt
+uv run python -m src test-stt
 
 # Test TTS (speech output)
-python -m src test-tts
+uv run python -m src test-tts
 ```
 
 Press Ctrl+Space, speak a test phrase, and release. You should see the transcription and hear the response.
@@ -105,19 +105,19 @@ Press Ctrl+Space, speak a test phrase, and release. You should see the transcrip
 
 ```bash
 # List available characters
-python -m src list-characters
+uv run python -m src list-characters
 
-# Select Toudie
-python -m src select-character toudie
+# Select Toadwart
+uv run python -m src select-character toadwart
 
 # Or disable character
-python -m src select-character none
+uv run python -m src select-character none
 ```
 
 ### 6. Start voice interaction
 
 ```bash
-python -m src start
+uv run python -m src start
 ```
 
 Now you can control Claude Code with voice commands:
@@ -135,13 +135,12 @@ Press Ctrl+C to stop.
 ### View current configuration
 
 ```bash
-python -m src config show
+uv run python -m src config show
 ```
 
 ### Configuration file location
 
-- **Linux/macOS**: `~/.claude-code/voice-config.json`
-- **Windows**: `%USERPROFILE%\.claude-code\voice-config.json`
+`.claude/voice-config.json` in the project root directory
 
 ### Configuration options
 
@@ -177,7 +176,7 @@ python -m src config show
 
 ### Add API keys (optional)
 
-Edit `~/.claude-code/voice-config.json` and add your API keys:
+Edit `.claude/voice-config.json` in the project root and add your API keys:
 
 ```json
 {
@@ -210,27 +209,27 @@ $env:ELEVENLABS_API_KEY="..."
 
 ```bash
 # Start voice interaction
-python -m src start
+uv run python -m src start
 
 # Configuration
-python -m src config show                    # Show current configuration
-python -m src config init [--force]         # Initialize default configuration
-python -m src config enable-voice-input     # Enable voice input
-python -m src config disable-voice-input    # Disable voice input
-python -m src config enable-voice-output    # Enable voice output
-python -m src config disable-voice-output   # Disable voice output
+uv run python -m src config show                    # Show current configuration
+uv run python -m src config init [--force]         # Initialize default configuration
+uv run python -m src config enable-voice-input     # Enable voice input
+uv run python -m src config disable-voice-input    # Disable voice input
+uv run python -m src config enable-voice-output    # Enable voice output
+uv run python -m src config disable-voice-output   # Disable voice output
 
 # Device management
-python -m src list-devices                  # List audio devices
-python -m src list-characters               # List available characters
+uv run python -m src list-devices                  # List audio devices
+uv run python -m src list-characters               # List available characters
 
 # Character management
-python -m src select-character <name>       # Select character for roleplay
-python -m src select-character none         # Disable character
+uv run python -m src select-character <name>       # Select character for roleplay
+uv run python -m src select-character none         # Disable character
 
 # Testing
-python -m src test-stt                      # Test speech-to-text
-python -m src test-tts                      # Test text-to-speech
+uv run python -m src test-stt                      # Test speech-to-text
+uv run python -m src test-tts                      # Test text-to-speech
 ```
 
 ## Usage Examples
@@ -288,21 +287,21 @@ sudo apt-get install portaudio19-dev
 # PortAudio is included with sounddevice wheel
 ```
 
-Then reinstall sounddevice:
+Then run:
 
 ```bash
-uv pip install --force-reinstall sounddevice
+uv sync --reinstall-package sounddevice
 ```
 
 ### "SpeechRecognition library not available"
 
 ```bash
-uv pip install SpeechRecognition
+uv sync
 ```
 
 ### Microphone not working
 
-1. Check available devices: `python -m src list-devices`
+1. Check available devices: `uv run python -m src list-devices`
 2. Ensure your microphone is not muted
 3. Grant microphone permissions (macOS: System Preferences → Security & Privacy → Microphone)
 4. Test with system voice recorder first
@@ -389,7 +388,7 @@ claude-code-character/
 │   │   ├── profile.py
 │   │   ├── transformer.py   # Text transformation with personality
 │   │   └── profiles/
-│   │       └── toudie.json
+│   │       └── toadwart.json
 │   ├── config/              # Configuration
 │   │   ├── voice_config.py
 │   │   └── persistence.py

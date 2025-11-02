@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "serena": {
+      "args": [
+        "--transport",
+        "stdio",
+        "--log-level",
+        "DEBUG"
+      ],
+      "command": "${USERPROFILE}\\.local\\bin\\serena-mcp-server.exe",
+      "type": "stdio"
+    }
+  }
+}

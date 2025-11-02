@@ -87,13 +87,13 @@ This document consolidates research findings for implementing voice interaction 
 **Rationale**:
 - **ElevenLabs API** (Primary - when API key provided):
   - **Polish language support**: Excellent multilingual support including Polish with natural pronunciation
-  - **Character voices**: Can create custom voice models for specific characters (e.g., Toudie with unique personality)
+  - **Character voices**: Can create custom voice models for specific characters (e.g., Toadwart with unique personality)
   - **Voice quality**: Industry-leading natural speech quality, far superior to standard TTS
   - **Character modulation**: Two-layer approach:
     - Text transformation: Apply character personality to response text
     - Voice cloning: Use ElevenLabs voice that matches character (or create custom voice)
   - **Latency**: Streaming audio with WebSocket API starts in ~500ms
-  - **Emotional range**: Voice can convey emotion and energy (perfect for cheerful Toudie character)
+  - **Emotional range**: Voice can convey emotion and energy (perfect for cheerful Toadwart character)
 
 - **System TTS** (Automatic Fallback - when no ElevenLabs API key):
   - **Cost**: Free (uses OS built-in text-to-speech)
@@ -129,16 +129,16 @@ This document consolidates research findings for implementing voice interaction 
   - `systemPrompt`: Instructions for transforming response text
   - `phrases`: Array of characteristic expressions
 
-**Example Toudie Profile**:
+**Example Toadwart Profile**:
 ```json
 {
-  "name": "Toudie",
+  "name": "Toadwart",
   "voiceId": "21m00Tcm4TlvDq8ikWAM",
   "voiceSettings": {
     "stability": 0.5,
     "similarityBoost": 0.75
   },
-  "systemPrompt": "Transform responses to sound like Toudie from Gummy Bears: cheerful, helpful, occasionally references Gummi Berry juice or adventures. Add personality but keep technical content intact.",
+  "systemPrompt": "Transform responses to sound like Toadwart from Gummy Bears: cheerful, helpful, occasionally references Gummi Berry juice or adventures. Add personality but keep technical content intact.",
   "phrases": ["Great gobs of gummiberries!", "Bouncing bears!", "Let me check the Gummi archives..."]
 }
 ```
@@ -232,7 +232,7 @@ This document consolidates research findings for implementing voice interaction 
 - `pydub` - Audio format conversion and processing
 
 **Storage**: JSON configuration files
-- `~/.claude-code/voice-config.json` - User preferences
+- `.claude/voice-config.json` - User preferences (project root)
 - `src/character/profiles/*.json` - Character profile definitions
 
 **Testing**: pytest with pytest-asyncio

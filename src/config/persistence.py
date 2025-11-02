@@ -16,16 +16,27 @@ from src.config.voice_config import (
 )
 
 
+def get_project_root() -> Path:
+    """Get the project root directory by finding pyproject.toml."""
+    current = Path(__file__).resolve()
+    for parent in [current] + list(current.parents):
+        if (parent / "pyproject.toml").exists():
+            return parent
+    # Fallback to current working directory if pyproject.toml not found
+    return Path.cwd()
+
+
 def get_config_path() -> Path:
     """Get the path to the voice configuration file."""
-    config_dir = Path.home() / ".claude-code"
+    project_root = get_project_root()
+    config_dir = project_root / ".claude"
     config_dir.mkdir(parents=True, exist_ok=True)
     return config_dir / "voice-config.json"
 
 
 def load_config() -> VoiceConfiguration:
     """
-    Load voice configuration from ~/.claude-code/voice-config.json.
+    Load voice configuration from .claude/voice-config.json in the project root.
 
     API keys can be overridden by environment variables:
     - OPENAI_API_KEY
@@ -89,7 +100,7 @@ def load_config() -> VoiceConfiguration:
 
 
 def save_config(config: VoiceConfiguration) -> None:
-    """Save voice configuration to ~/.claude-code/voice-config.json with chmod 600."""
+    """Save voice configuration to .claude/voice-config.json in the project root with chmod 600."""
     config_path = get_config_path()
 
     data = {

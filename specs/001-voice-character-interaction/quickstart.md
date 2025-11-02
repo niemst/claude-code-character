@@ -101,11 +101,11 @@ python -m claude_code_voice config set voice.ttsConfig.elevenlabsModel "eleven_m
 ### Step 3: Enable Character Roleplay
 
 ```bash
-# Activate Toudie character (from Gummy Bears)
-python -m claude_code_voice config set voice.selectedCharacter "toudie"
+# Activate Toadwart character (from Gummy Bears)
+python -m claude_code_voice config set voice.selectedCharacter "toadwart"
 ```
 
-Now your responses will be spoken in Toudie's voice with personality!
+Now your responses will be spoken in Toadwart's voice with personality!
 
 **Example response**: *"Great gobs of gummiberries! File package.json has been read successfully, friend! It contains 47 lines..."*
 
@@ -126,7 +126,7 @@ Now your responses will be spoken in Toudie's voice with personality!
 - Character text transformation (personality in words)
 
 ✅ **Character Roleplay**:
-- Text-based personality (e.g., Toudie's phrases)
+- Text-based personality (e.g., Toadwart's phrases)
 - Works with both system and premium TTS
 
 ### What Improves with ElevenLabs (Paid)
@@ -161,7 +161,7 @@ python -m claude_code_voice voice characters list
 
 # Switch character
 python -m claude_code_voice config set voice.selectedCharacter "none"  # disable character
-python -m claude_code_voice config set voice.selectedCharacter "toudie"  # enable Toudie
+python -m claude_code_voice config set voice.selectedCharacter "toadwart"  # enable Toadwart
 ```
 
 ### Audio Device Selection
@@ -300,10 +300,10 @@ python -m claude_code_voice config set voice.audioDevices.inputDevice null
 
 ### Built-in Characters
 
-#### Toudie (Gummy Bears)
+#### Toadwart (Gummy Bears)
 - **Voice**: Cheerful, enthusiastic
 - **Personality**: Helpful, occasionally references Gummi Berry juice
-- **Activation**: `python -m claude_code_voice config set voice.selectedCharacter "toudie"`
+- **Activation**: `python -m claude_code_voice config set voice.selectedCharacter "toadwart"`
 - **Example**: *"Great gobs of gummiberries! Let me check that file for you!"*
 
 ### Creating Custom Characters
@@ -332,7 +332,7 @@ python -m claude_code_voice config set voice.audioDevices.inputDevice null
    }
    ```
 
-2. Save to `~/.claude-code/characters/my-character.json`
+2. Save to `.claude/characters/my-character.json` in the project root
 
 3. Activate:
    ```bash
@@ -396,7 +396,7 @@ python -m claude_code_voice config set voice.ttsConfig.elevenlabsModel "eleven_m
 
 ## Configuration File Reference
 
-Full configuration stored in `~/.claude-code/voice-config.json`:
+Full configuration stored in `.claude/voice-config.json` (project root):
 
 ```json
 {

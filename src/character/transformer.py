@@ -91,7 +91,7 @@ class TechnicalContentProtector:
 
         return result
 
-    def _create_placeholder(self, match: re.Match) -> str:
+    def _create_placeholder(self, match: re.Match[str]) -> str:
         """
         Create placeholder for matched technical content.
 
@@ -206,7 +206,7 @@ class CharacterTransformer:
             return text
 
         # Simple greeting based on character
-        # For Toudie: cheerful greetings
+        # For Toadwart: simple, loyal greetings
         greetings = [
             "Oh! ",
             "Hey there! ",
@@ -278,7 +278,7 @@ class CharacterTransformer:
         else:
             logger.warning("Character '%s' not found", character_name)
 
-    def get_voice_settings(self) -> tuple[str, dict] | None:
+    def get_voice_settings(self) -> tuple[str, dict[str, float | bool]] | None:
         """
         Get voice ID and settings for current character.
 

@@ -17,7 +17,7 @@
 
 - Single project structure at repository root
 - `src/` - Main source code
-- `~/.claude-code/` - User configuration directory
+- `.claude/` - User configuration directory (project root)
 
 ---
 
@@ -44,12 +44,12 @@
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
 - [x] T010 Define VoiceConfiguration dataclass in src/config/voice_config.py with type hints
-- [x] T011 Implement configuration loader in src/config/persistence.py (load from ~/.claude-code/voice-config.json)
-- [x] T012 Implement configuration saver in src/config/persistence.py (save to ~/.claude-code/voice-config.json with chmod 600)
+- [x] T011 Implement configuration loader in src/config/persistence.py (load from .claude/voice-config.json)
+- [x] T012 Implement configuration saver in src/config/persistence.py (save to .claude/voice-config.json with chmod 600)
 - [x] T013 Create default configuration factory in src/config/voice_config.py (returns VoiceConfiguration with sensible defaults)
 - [x] T014 [P] Define CharacterProfile dataclass in src/character/profile.py with validation
 - [x] T015 [P] Implement character profile loader in src/character/profile.py (load from src/character/profiles/*.json)
-- [x] T016 Create Toudie character profile JSON in src/character/profiles/toudie.json (with voiceId, systemPrompt, phrases per data-model.md)
+- [x] T016 Create Toadwart character profile JSON in src/character/profiles/toadwart.json (with voiceId, systemPrompt, phrases per data-model.md)
 - [x] T017 [P] Define VoiceSession dataclass in src/voice/voice_session.py for runtime state
 - [x] T018 [P] Implement audio device enumeration in src/audio/device_manager.py (list available input/output devices)
 
@@ -112,9 +112,9 @@
 
 ## Phase 5: User Story 3 - Character Roleplay for Voice Responses (Priority: P3)
 
-**Goal**: Apply character personality (e.g., Toudie from Gummy Bears) to voice responses only, maintaining 100% technical accuracy in work execution
+**Goal**: Apply character personality (e.g., Toadwart from Gummy Bears) to voice responses only, maintaining 100% technical accuracy in work execution
 
-**Independent Test**: Configure Toudie character, issue any command. Verify that voice responses include character-appropriate phrases ("Great gobs of gummiberries!") while technical content (file names, code) remains unchanged.
+**Independent Test**: Configure Toadwart character, issue any command. Verify that voice responses include character-appropriate phrases ("Great gobs of gummiberries!") while technical content (file names, code) remains unchanged.
 
 ### Implementation for User Story 3
 
@@ -255,7 +255,7 @@ Task T036: "Implement audio streaming playback in src/audio/playback.py"
 3. **Polish (US3)**: Add character roleplay
    - Optional ElevenLabs for premium quality
    - Personality without sacrificing accuracy
-   - Independent test: Toudie responses include character phrases
+   - Independent test: Toadwart responses include character phrases
 
 Each increment is fully functional and can be deployed independently.
 
@@ -293,10 +293,10 @@ At end of implementation, verify all Success Criteria from spec.md:
 - [ ] **SC-001**: 80% of common commands successful via voice (test with 20+ commands)
 - [ ] **SC-002**: Voice command recognition <2 seconds (measure with voice_session.statistics)
 - [ ] **SC-003**: Voice playback starts <1 second (measure with voice_session.statistics)
-- [ ] **SC-004**: Character roleplay maintains 100% technical accuracy (test code analysis with Toudie active)
+- [ ] **SC-004**: Character roleplay maintains 100% technical accuracy (test code analysis with Toadwart active)
 - [ ] **SC-005**: Complete 15+ minute coding session using only voice
 - [ ] **SC-006**: Voice interruption responds <500ms (measure with voice_session.statistics)
-- [ ] **SC-007**: Character personality in 90%+ of responses when enabled (count Toudie phrases)
+- [ ] **SC-007**: Character personality in 90%+ of responses when enabled (count Toadwart phrases)
 - [ ] **SC-008**: Voice toggle in <3 seconds (test enable/disable commands)
 
 ---
