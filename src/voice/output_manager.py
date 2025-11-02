@@ -1,7 +1,10 @@
 """Voice output manager orchestrating TTS and audio playback."""
 
+import logging
 import time
 from collections.abc import Callable
+
+logger = logging.getLogger(__name__)
 
 from src.audio.playback import AudioPlayer, PlaybackController
 from src.character.transformer import CharacterTransformer
@@ -93,11 +96,11 @@ class VoiceOutputManager:
     def start(self) -> None:
         """Start voice output."""
         if self._is_active:
-            print("⚠️  Voice output already active")
+            logger.warning("Voice output already active")
             return
 
         if not self.config.voice_output_enabled:
-            print("⚠️  Voice output is disabled in configuration")
+            logger.warning("Voice output is disabled in configuration")
             return
 
         # Start playback controller
@@ -108,16 +111,15 @@ class VoiceOutputManager:
 
         self._is_active = True
 
-        print("✅ Voice output started")
-        print(f"   TTS providers: {[p.value for p in self.tts.get_available_providers()]}")
-        print("   Playback enabled")
+        logger.info("Voice output started")
+        logger.info("   TTS providers: %s", [p.value for p in self.tts.get_available_providers()])
+        logger.info("   Playback enabled")
 
         # Show character status
         if self.character_transformer.is_active:
-            print(f"   ✨ Character: {self.character_transformer.character_name}")
+            logger.info("   Character: %s", self.character_transformer.character_name)
         else:
-            print("   Character: (none)")
-        print()
+            logger.info("   Character: (none)")
 
     def stop(self) -> None:
         """Stop voice output."""
@@ -132,7 +134,7 @@ class VoiceOutputManager:
 
         self._is_active = False
 
-        print("✅ Voice output stopped")
+        logger.info("Voice output stopped")
         self._print_statistics()
 
     def speak(self, text: str, voice_id: str | None = None) -> None:
@@ -144,7 +146,7 @@ class VoiceOutputManager:
             voice_id: Optional voice ID (for ElevenLabs)
         """
         if not self._is_active:
-            print("⚠️  Voice output not active, call start() first")
+            logger.warning("Voice output not active, call start() first")
             return
 
         self._process_response(text, voice_id)
@@ -162,9 +164,9 @@ class VoiceOutputManager:
 
         # Check performance criteria (SC-006: <500ms interrupt)
         if latency_ms > 500:
-            print(f"⚠️  Interrupt slower than target (<500ms): {latency_ms}ms")
+            logger.warning("Interrupt slower than target (<500ms): %dms", latency_ms)
         else:
-            print(f"✅ Interrupted playback ({latency_ms}ms)")
+            logger.info("Interrupted playback (%dms)", latency_ms)
 
     def _on_response_intercepted(self, response_text: str) -> None:
         """
@@ -173,7 +175,7 @@ class VoiceOutputManager:
         Args:
             response_text: Response text from Claude Code
         """
-        print(f'📥 Response intercepted: "{response_text[:50]}..."')
+        logger.info('Response intercepted: "%s..."', response_text[:50])
         self._process_response(response_text)
 
     def _process_response(self, text: str, voice_id: str | None = None) -> None:
@@ -193,8 +195,8 @@ class VoiceOutputManager:
         character_transformed = was_transformed
 
         if was_transformed:
-            print(
-                f"✨ Character transformation applied ({self.character_transformer.character_name})"
+            logger.info(
+                "Character transformation applied (%s)", self.character_transformer.character_name
             )
 
         # Get character-specific voice settings if available
@@ -211,7 +213,7 @@ class VoiceOutputManager:
                     use_speaker_boost=settings.get("use_speaker_boost", True),
                 )
 
-        print("🔄 Synthesizing speech...")
+        logger.info("Synthesizing speech...")
 
         try:
             # Convert text to speech
@@ -219,9 +221,9 @@ class VoiceOutputManager:
                 text=transformed_text, voice_id=voice_id
             )
 
-            print(f"✅ Synthesized ({provider_used.value})")
-            print(f"   TTS time: {tts_duration_ms:.0f}ms")
-            print(f"   Audio size: {len(audio_data)} bytes")
+            logger.info("Synthesized (%s)", provider_used.value)
+            logger.info("   TTS time: %.0fms", tts_duration_ms)
+            logger.info("   Audio size: %d bytes", len(audio_data))
 
             # Calculate time from response to playback start
             playback_start_latency = int((time.time() - tts_start) * 1000)
@@ -230,7 +232,9 @@ class VoiceOutputManager:
             self.session.statistics.update_playback_start_time(playback_start_latency)
 
             if playback_start_latency > 1000:
-                print(f"⚠️  Playback start slower than target (<1s): {playback_start_latency}ms")
+                logger.warning(
+                    "Playback start slower than target (<1s): %dms", playback_start_latency
+                )
 
             # Queue for playback
             self.playback_controller.queue_audio(audio_data, "auto")
@@ -242,8 +246,8 @@ class VoiceOutputManager:
                 character_transformed=character_transformed,
             )
 
-        except Exception as e:
-            print(f"❌ TTS failed: {e}")
+        except Exception:
+            logger.error("TTS failed", exc_info=True)
 
     def _on_playback_start(self) -> None:
         """Callback when playback starts."""
@@ -251,10 +255,10 @@ class VoiceOutputManager:
         try:
             self.session.set_playing(True)
         except ValueError as e:
-            print(f"⚠️  Cannot start playback: {e}")
+            logger.warning("Cannot start playback: %s", e)
             return
 
-        print("🔊 Playback started...")
+        logger.info("Playback started")
 
         if self._on_playback_start_callback:
             self._on_playback_start_callback()
@@ -264,7 +268,7 @@ class VoiceOutputManager:
         # Reset session state
         self.session.set_playing(False)
 
-        print("🔊 Playback stopped")
+        logger.info("Playback stopped")
 
         # Dequeue response
         self.session.dequeue_response()
@@ -295,12 +299,12 @@ class VoiceOutputManager:
     def _print_statistics(self) -> None:
         """Print session statistics."""
         stats = self.session.statistics
-        print("\n📊 Voice Output Statistics:")
+        logger.info("Voice Output Statistics:")
         if stats.commands_issued_count > 0:
-            print(f"   Average playback start time: {stats.average_playback_start_time_ms:.0f}ms")
+            logger.info("   Average playback start time: %.0fms", stats.average_playback_start_time_ms)
         if stats.interruptions_count > 0:
-            print(f"   Interruptions: {stats.interruptions_count}")
-            print(f"   Average interrupt latency: {stats.average_interrupt_latency_ms:.0f}ms")
+            logger.info("   Interruptions: %d", stats.interruptions_count)
+            logger.info("   Average interrupt latency: %.0fms", stats.average_interrupt_latency_ms)
 
     @property
     def is_active(self) -> bool:

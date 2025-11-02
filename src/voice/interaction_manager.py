@@ -1,9 +1,12 @@
 """Voice interaction manager orchestrating push-to-talk, recording, and transcription."""
 
+import logging
 import time
 from collections.abc import Callable
 
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 from src.audio.capture import PushToTalkHandler
 from src.config.persistence import load_config
@@ -70,21 +73,21 @@ class VoiceInteractionManager:
     def start(self) -> None:
         """Start voice interaction."""
         if self._is_active:
-            print("⚠️  Voice interaction already active")
+            logger.warning("Voice interaction already active")
             return
 
         if not self.config.voice_input_enabled:
-            print("⚠️  Voice input is disabled in configuration")
+            logger.warning("Voice input is disabled in configuration")
             return
 
         # Start push-to-talk handler
         self.ptt_handler.start()
         self._is_active = True
 
-        print("✅ Voice interaction started")
-        print(f"   Hotkey: {self.config.push_to_talk_key}")
-        print(f"   STT providers: {[p.value for p in self.stt.get_available_providers()]}")
-        print("\n💡 Press and hold Ctrl+Space to speak, release to send command\n")
+        logger.info("Voice interaction started")
+        logger.info("   Hotkey: %s", self.config.push_to_talk_key)
+        logger.info("   STT providers: %s", [p.value for p in self.stt.get_available_providers()])
+        logger.info("Press and hold Ctrl+Space to speak, release to send command")
 
     def stop(self) -> None:
         """Stop voice interaction."""
@@ -95,7 +98,7 @@ class VoiceInteractionManager:
         self.ptt_handler.stop()
         self._is_active = False
 
-        print("✅ Voice interaction stopped")
+        logger.info("Voice interaction stopped")
         self._print_statistics()
 
     def _on_audio_captured(self, audio_data: np.ndarray, sample_rate: int) -> None:
@@ -110,29 +113,29 @@ class VoiceInteractionManager:
         try:
             self.session.set_listening(True)
         except ValueError as e:
-            print(f"⚠️  Cannot start listening: {e}")
+            logger.warning("Cannot start listening: %s", e)
             return
 
         # Calculate audio duration
         audio_duration = len(audio_data) / sample_rate
-        print(f"   Audio duration: {audio_duration:.1f}s")
+        logger.info("   Audio duration: %.1fs", audio_duration)
 
         # Check minimum duration
         if audio_duration < 0.5:
-            print("⚠️  Audio too short (minimum 0.5s)")
+            logger.warning("Audio too short (minimum 0.5s)")
             self.session.set_listening(False)
             return
 
         # Transcribe audio
-        print("🔄 Transcribing...")
+        logger.info("Transcribing...")
         time.time()
 
         try:
             text, provider_used, duration_ms = self.stt.transcribe(audio_data, sample_rate)
             transcription_duration = int(duration_ms)
 
-            print(f'✅ Transcribed ({provider_used.value}): "{text}"')
-            print(f"   Transcription time: {transcription_duration}ms")
+            logger.info('Transcribed (%s): "%s"', provider_used.value, text)
+            logger.info("   Transcription time: %dms", transcription_duration)
 
             # Update session with command
             timestamp = int(time.time() * 1000)
@@ -148,16 +151,18 @@ class VoiceInteractionManager:
 
             # Check performance criteria (SC-002: <2s transcription)
             if transcription_duration > 2000:
-                print(f"⚠️  Transcription slower than target (<2s): {transcription_duration}ms")
+                logger.warning(
+                    "Transcription slower than target (<2s): %dms", transcription_duration
+                )
 
             # Send command to Claude Code
             if self.on_command:
                 self.on_command(text)
             else:
-                print(f"📝 Command: {text}")
+                logger.info("Command: %s", text)
 
-        except Exception as e:
-            print(f"❌ Transcription failed: {e}")
+        except Exception:
+            logger.error("Transcription failed", exc_info=True)
 
         finally:
             # Reset listening state
@@ -181,10 +186,12 @@ class VoiceInteractionManager:
     def _print_statistics(self) -> None:
         """Print session statistics."""
         stats = self.session.statistics
-        print("\n📊 Session Statistics:")
-        print(f"   Commands issued: {stats.commands_issued_count}")
+        logger.info("Session Statistics:")
+        logger.info("   Commands issued: %d", stats.commands_issued_count)
         if stats.commands_issued_count > 0:
-            print(f"   Average transcription time: {stats.average_transcription_time_ms:.0f}ms")
+            logger.info(
+                "   Average transcription time: %.0fms", stats.average_transcription_time_ms
+            )
 
     @property
     def is_active(self) -> bool:

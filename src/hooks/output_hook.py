@@ -1,6 +1,9 @@
 """Output hook for intercepting Claude Code responses and converting to speech."""
 
+import logging
 from collections.abc import Callable
+
+logger = logging.getLogger(__name__)
 
 
 class ClaudeCodeOutputHook:
@@ -45,7 +48,7 @@ class ClaudeCodeOutputHook:
         self._is_monitoring = True
 
         if self.debug:
-            print("📡 Output hook monitoring started")
+            logger.debug("Output hook monitoring started")
 
     def stop_monitoring(self) -> None:
         """Stop monitoring Claude Code output."""
@@ -55,7 +58,7 @@ class ClaudeCodeOutputHook:
         self._is_monitoring = False
 
         if self.debug:
-            print("📡 Output hook monitoring stopped")
+            logger.debug("Output hook monitoring stopped")
 
     def intercept_response(self, response_text: str) -> None:
         """
@@ -73,19 +76,21 @@ class ClaudeCodeOutputHook:
         # Filter out empty or very short responses
         if not response_text or len(response_text.strip()) < self.min_response_length:
             if self.debug:
-                print(f"⚠️  Response too short, skipping TTS: {len(response_text)} chars")
+                logger.debug("Response too short, skipping TTS: %d chars", len(response_text))
             return
 
         # Filter out command-like responses (optional)
         if response_text.strip().startswith("[CLAUDE_CODE_"):
             if self.debug:
-                print("⚠️  Skipping internal command response")
+                logger.debug("Skipping internal command response")
             return
 
         self._response_count += 1
 
         if self.debug:
-            print(f'📥 Intercepted response #{self._response_count}: "{response_text[:50]}..."')
+            logger.debug(
+                'Intercepted response #%d: "%s..."', self._response_count, response_text[:50]
+            )
 
         # Call response callback
         if self.on_response:

@@ -23,7 +23,7 @@ Voice-enabled character interaction for Claude Code. Control Claude Code with yo
 
 ### ✅ User Story 3 - Character Roleplay
 
-- **Character personalities** - Add personality to voice responses (e.g., Toudie from Gummy Bears)
+- **Character personalities** - Add personality to voice responses (e.g., like Toudie from Gummy Bears)
 - **Technical content preservation** - 100% accuracy for code, paths, errors
 - **Characteristic phrases** - Inject character-specific catchphrases
 - **Character-specific voices** - Use custom ElevenLabs voice per character
@@ -460,22 +460,3 @@ This project is distributed under a **Custom License** based on [CC BY-NC-ND 4.0
 with additional restrictions prohibiting any AI/LLM training, commercial use, or code modification.
 No warranty of any kind is provided.
 See the full license text here: [LICENSE](./LICENSE)
-
-## Credits
-
-- Built for [Claude Code](https://claude.com/claude-code)
-- Character profiles inspired by classic animation
-- Uses Google Web Speech API, OpenAI Whisper, and ElevenLabs
-
-## Contributing
-
-This project follows the SpecKit development methodology:
-
-1. Feature specification (`spec.md`)
-2. Implementation plan (`plan.md`)
-3. Task breakdown (`tasks.md`)
-4. Checklist validation
-5. Implementation
-6. Testing and validation
-
-See `specs/001-voice-character-interaction/` for design documents.
