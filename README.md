@@ -4,7 +4,7 @@ Voice-enabled character interaction for Claude Code. Control Claude Code with yo
 
 ## Features
 
-### ✅ User Story 1 - Voice Command Input
+### User Story 1 - Voice Command Input
 
 - **Push-to-talk voice commands** - Press and hold Ctrl+Space, speak your command, release to execute
 - **Free speech recognition** - Uses Google Web Speech API (no API key required)
@@ -12,7 +12,7 @@ Voice-enabled character interaction for Claude Code. Control Claude Code with yo
 - **Performance tracking** - Monitors transcription latency (target: <2s)
 - **Cross-platform** - Works on Windows, macOS, and Linux
 
-### ✅ User Story 2 - Voice Response Output
+### User Story 2 - Voice Response Output
 
 - **Text-to-speech** - System TTS (free) or ElevenLabs (premium quality)
 - **Automatic provider selection** - Uses best available TTS provider
@@ -21,7 +21,7 @@ Voice-enabled character interaction for Claude Code. Control Claude Code with yo
 - **Interrupt handling** - Stop playback by pressing Ctrl+Space (target: <500ms)
 - **Performance monitoring** - Tracks playback start latency (target: <1s)
 
-### ✅ User Story 3 - Character Roleplay
+### User Story 3 - Character Roleplay
 
 - **Character personalities** - Add personality to voice responses (e.g., like Toudie from Gummy Bears)
 - **Technical content preservation** - 100% accuracy for code, paths, errors
@@ -242,10 +242,10 @@ User: [Press Ctrl+Space]
 User: "read file main dot py"
 User: [Release Ctrl+Space]
 
-System: 🎤 Recording started...
-System: 🎤 Recording stopped
-System: 🔄 Transcribing...
-System: ✅ Transcribed (web_speech_api): "read file main.py"
+System: Recording started...
+System: Recording stopped
+System: Transcribing...
+System: Transcribed (web_speech_api): "read file main.py"
 System:    Transcription time: 847ms
 
 Claude Code: [executes command]
@@ -256,7 +256,7 @@ Claude Code: [executes command]
 ```
 User: [Ctrl+Space] "create a new file called utils dot py" [Release]
 
-System: ✅ Transcribed: "create a new file called utils.py"
+System: Transcribed: "create a new file called utils.py"
 
 Claude Code: [creates utils.py]
 ```
@@ -266,7 +266,7 @@ Claude Code: [creates utils.py]
 ```
 User: [Ctrl+Space] "write a function to calculate fibonacci numbers" [Release]
 
-System: ✅ Transcribed: "write a function to calculate fibonacci numbers"
+System: Transcribed: "write a function to calculate fibonacci numbers"
 
 Claude Code: [generates fibonacci function]
 ```
@@ -421,14 +421,14 @@ claude-code-character/
 
 ## Roadmap
 
-### Phase 3: User Story 1 - ✅ Complete
+### Phase 3: User Story 1 - Complete
 
 - [x] Push-to-talk voice command input
 - [x] Web Speech API + Whisper fallback STT
 - [x] Performance monitoring
 - [x] Input hook to Claude Code
 
-### Phase 4: User Story 2 - ✅ Complete
+### Phase 4: User Story 2 - Complete
 
 - [x] Text-to-speech output
 - [x] System TTS + ElevenLabs support
@@ -437,7 +437,7 @@ claude-code-character/
 - [x] Interrupt handling
 - [x] Performance monitoring
 
-### Phase 5: User Story 3 - ✅ Complete
+### Phase 5: User Story 3 - Complete
 
 - [x] Character profile system
 - [x] Text transformation (personality injection)
@@ -445,7 +445,7 @@ claude-code-character/
 - [x] Character-specific voice settings
 - [x] CLI character selection
 
-### Phase 6: Polish - ✅ Complete
+### Phase 6: Polish - Complete
 
 - [x] Environment variable support for API keys
 - [x] Graceful degradation for missing devices
