@@ -124,7 +124,6 @@ Follow-up TODOs:
 - **Rationale**: Emojis introduce encoding issues, reduce professionalism, create accessibility problems, and clutter version control history. Code and documentation must be universally readable and maintainable.
 
 ### Commit Message Standards
-
 **Format Requirements**:
 - All commit messages MUST be in English
 - First line: Brief summary in imperative mood (50 chars max)
@@ -135,8 +134,8 @@ Follow-up TODOs:
 
 **Prohibited Content**:
 - **Absolute prohibition**: No meta-references to AI tools
-- No "Co-authored-by: Claude" or similar AI attribution
-- No "Generated with Claude Code" or similar tool references
+- No "Co-Authored-By: Claude" or similar AI attribution
+- No "Generated with ..." or similar tool references
 - No emojis or decorative icons
 - No unnecessary verbosity or filler text
 
