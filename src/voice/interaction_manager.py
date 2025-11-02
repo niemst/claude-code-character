@@ -6,13 +6,13 @@ from collections.abc import Callable
 
 import numpy as np
 
-logger = logging.getLogger(__name__)
-
 from src.audio.capture import PushToTalkHandler
 from src.config.persistence import load_config
 from src.config.voice_config import VoiceConfiguration
 from src.voice.speech_to_text import SpeechToText
 from src.voice.voice_session import LastCommand, VoiceSession
+
+logger = logging.getLogger(__name__)
 
 
 class VoiceInteractionManager:

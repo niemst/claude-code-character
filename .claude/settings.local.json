@@ -1,10 +1,30 @@
 {
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "uv run python src/hooks/voice_output_hook.py",
+            "timeout": 30,
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ]
+  },
   "permissions": {
     "allow": [
+      "SlashCommand(/speckit.specify)",
+      "SlashCommand(/speckit.plan)",
+      "SlashCommand(/speckit.implement)",
       "SlashCommand(/speckit.tasks)",
       "Bash(pwsh:*)",
+      "Bash(find:*)",
       "Bash(python -m black:*)",
-      "Bash(python -m ruff check:*)"
+      "Bash(python -m ruff check:*)",
+      "mcp__serena__**",
+      "mcp__serena__check_onboarding_performed"
     ],
     "ask": [],
     "deny": []

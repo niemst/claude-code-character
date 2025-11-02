@@ -60,9 +60,8 @@ class CharacterProfile:
         if not self.system_prompt or len(self.system_prompt) > 500:
             raise ValueError("system_prompt must be 1-500 characters")
         if not 3 <= len(self.characteristic_phrases) <= 10:
-            raise ValueError(
-                f"characteristic_phrases must have 3-10 items, got {len(self.characteristic_phrases)}"
-            )
+            count = len(self.characteristic_phrases)
+            raise ValueError(f"characteristic_phrases must have 3-10 items, got {count}")
 
 
 def load_character_profile(profile_path: Path) -> CharacterProfile:

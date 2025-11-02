@@ -15,8 +15,7 @@ except ImportError:
     PYTTSX3_AVAILABLE = False
 
 try:
-    from elevenlabs import VoiceSettings, generate
-    from elevenlabs.client import ElevenLabs
+    from elevenlabs import Voice, VoiceSettings, generate
 
     ELEVENLABS_AVAILABLE = True
 except ImportError:
@@ -102,7 +101,7 @@ def synthesize_with_system_tts(
         return audio_data
 
     except Exception as e:
-        raise TtsError(f"System TTS error: {e}")
+        raise TtsError(f"System TTS error: {e}") from e
 
 
 def synthesize_with_elevenlabs(
@@ -141,9 +140,7 @@ def synthesize_with_elevenlabs(
         raise TtsError("ElevenLabs API key not provided")
 
     try:
-        ElevenLabs(api_key=api_key)
-
-        # Configure voice settings
+        # Configure voice with settings
         voice_settings = VoiceSettings(
             stability=stability,
             similarity_boost=similarity_boost,
@@ -151,34 +148,38 @@ def synthesize_with_elevenlabs(
             use_speaker_boost=use_speaker_boost,
         )
 
-        # Generate audio
-        audio_generator = generate(
-            text=text,
-            voice=voice_id,
-            model=model,
-            api_key=api_key,
-            voice_settings=voice_settings,
+        voice = Voice(
+            voice_id=voice_id,
+            settings=voice_settings,
         )
 
-        # Collect all audio chunks
-        audio_chunks = []
-        for chunk in audio_generator:
-            if chunk:
-                audio_chunks.append(chunk)
+        # Generate audio (without streaming, returns bytes directly)
+        audio_data = generate(
+            text=text,
+            voice=voice,
+            model=model,
+            api_key=api_key,
+        )
 
-        # Concatenate chunks
-        audio_data = b"".join(audio_chunks)
-
-        return audio_data
+        # Check if it's already bytes or needs to be collected from generator
+        if isinstance(audio_data, bytes):
+            return audio_data
+        else:
+            # It's a generator, collect chunks
+            audio_chunks = []
+            for chunk in audio_data:
+                if chunk and isinstance(chunk, bytes):
+                    audio_chunks.append(chunk)
+            return b"".join(audio_chunks)
 
     except Exception as e:
         error_msg = str(e).lower()
         if "network" in error_msg or "connection" in error_msg:
-            raise TtsNetworkError(f"ElevenLabs network error: {e}")
+            raise TtsNetworkError(f"ElevenLabs network error: {e}") from e
         elif "api" in error_msg or "quota" in error_msg or "authentication" in error_msg:
-            raise TtsApiError(f"ElevenLabs API error: {e}")
+            raise TtsApiError(f"ElevenLabs API error: {e}") from e
         else:
-            raise TtsError(f"ElevenLabs error: {e}")
+            raise TtsError(f"ElevenLabs error: {e}") from e
 
 
 def synthesize_with_elevenlabs_streaming(
@@ -217,7 +218,7 @@ def synthesize_with_elevenlabs_streaming(
         raise TtsError("ElevenLabs API key not provided")
 
     try:
-        # Configure voice settings
+        # Configure voice with settings
         voice_settings = VoiceSettings(
             stability=stability,
             similarity_boost=similarity_boost,
@@ -225,13 +226,17 @@ def synthesize_with_elevenlabs_streaming(
             use_speaker_boost=use_speaker_boost,
         )
 
+        voice = Voice(
+            voice_id=voice_id,
+            settings=voice_settings,
+        )
+
         # Generate audio with streaming
         audio_stream = generate(
             text=text,
-            voice=voice_id,
+            voice=voice,
             model=model,
             api_key=api_key,
-            voice_settings=voice_settings,
             stream=True,
         )
 
@@ -243,11 +248,11 @@ def synthesize_with_elevenlabs_streaming(
     except Exception as e:
         error_msg = str(e).lower()
         if "network" in error_msg or "connection" in error_msg:
-            raise TtsNetworkError(f"ElevenLabs network error: {e}")
+            raise TtsNetworkError(f"ElevenLabs network error: {e}") from e
         elif "api" in error_msg or "quota" in error_msg or "authentication" in error_msg:
-            raise TtsApiError(f"ElevenLabs API error: {e}")
+            raise TtsApiError(f"ElevenLabs API error: {e}") from e
         else:
-            raise TtsError(f"ElevenLabs error: {e}")
+            raise TtsError(f"ElevenLabs error: {e}") from e
 
 
 class TextToSpeech:

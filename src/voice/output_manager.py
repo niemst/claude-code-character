@@ -4,8 +4,6 @@ import logging
 import time
 from collections.abc import Callable
 
-logger = logging.getLogger(__name__)
-
 from src.audio.playback import AudioPlayer, PlaybackController
 from src.character.transformer import CharacterTransformer
 from src.config.persistence import load_config
@@ -13,6 +11,8 @@ from src.config.voice_config import VoiceConfiguration
 from src.hooks.output_hook import ClaudeCodeOutputHook
 from src.voice.text_to_speech import TextToSpeech, TtsProvider
 from src.voice.voice_session import VoiceSession
+
+logger = logging.getLogger(__name__)
 
 
 class VoiceOutputManager:
@@ -210,7 +210,7 @@ class VoiceOutputManager:
                     stability=settings["stability"],
                     similarity_boost=settings["similarity_boost"],
                     style=settings.get("style"),
-                    use_speaker_boost=settings.get("use_speaker_boost", True),
+                    use_speaker_boost=bool(settings.get("use_speaker_boost", True)),
                 )
 
         logger.info("Synthesizing speech...")
@@ -301,7 +301,9 @@ class VoiceOutputManager:
         stats = self.session.statistics
         logger.info("Voice Output Statistics:")
         if stats.commands_issued_count > 0:
-            logger.info("   Average playback start time: %.0fms", stats.average_playback_start_time_ms)
+            logger.info(
+                "   Average playback start time: %.0fms", stats.average_playback_start_time_ms
+            )
         if stats.interruptions_count > 0:
             logger.info("   Interruptions: %d", stats.interruptions_count)
             logger.info("   Average interrupt latency: %.0fms", stats.average_interrupt_latency_ms)

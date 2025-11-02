@@ -140,7 +140,7 @@ class AudioPlayer:
                     continue
 
         except Exception as e:
-            raise PlaybackError(f"Streaming playback error: {e}")
+            raise PlaybackError(f"Streaming playback error: {e}") from e
         finally:
             if self._stream:
                 self._stream.stop()
@@ -186,7 +186,7 @@ class AudioPlayer:
             sd.wait()  # Wait until playback finishes
 
         except Exception as e:
-            raise PlaybackError(f"Playback error: {e}")
+            raise PlaybackError(f"Playback error: {e}") from e
         finally:
             with self._lock:
                 self._is_playing = False
@@ -290,10 +290,12 @@ class AudioPlayer:
 
             return (samples, audio.frame_rate)
 
-        except ImportError:
-            raise PlaybackError("MP3 playback requires pydub. Install with: pip install pydub")
+        except ImportError as e:
+            raise PlaybackError(
+                "MP3 playback requires pydub. Install with: pip install pydub"
+            ) from e
         except Exception as e:
-            raise PlaybackError(f"Failed to load MP3: {e}")
+            raise PlaybackError(f"Failed to load MP3: {e}") from e
 
     def _decode_mp3_chunk(self, chunk: bytes) -> np.ndarray:
         """

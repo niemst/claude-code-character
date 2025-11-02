@@ -90,16 +90,16 @@ def transcribe_with_web_speech_api(
     try:
         # Use Google Web Speech API
         text = recognizer.recognize_google(audio, language=language)
-        return text
-    except sr.UnknownValueError:
-        raise SttUnclearAudioError("Could not understand audio")
+        return str(text)
+    except sr.UnknownValueError as e:
+        raise SttUnclearAudioError("Could not understand audio") from e
     except sr.RequestError as e:
         if "timeout" in str(e).lower():
-            raise SttTimeoutError(f"Web Speech API request timed out: {e}")
+            raise SttTimeoutError(f"Web Speech API request timed out: {e}") from e
         else:
-            raise SttNetworkError(f"Web Speech API network error: {e}")
+            raise SttNetworkError(f"Web Speech API network error: {e}") from e
     except Exception as e:
-        raise SttError(f"Web Speech API error: {e}")
+        raise SttError(f"Web Speech API error: {e}") from e
 
 
 def transcribe_with_whisper_api(
@@ -153,15 +153,15 @@ def transcribe_with_whisper_api(
 
         response = client.audio.transcriptions.create(model=model, file=wav_buffer)
 
-        return response.text
+        return str(response.text)
     except Exception as e:
         error_msg = str(e).lower()
         if "timeout" in error_msg or "timed out" in error_msg:
-            raise SttTimeoutError(f"Whisper API request timed out: {e}")
+            raise SttTimeoutError(f"Whisper API request timed out: {e}") from e
         elif "network" in error_msg or "connection" in error_msg:
-            raise SttNetworkError(f"Whisper API network error: {e}")
+            raise SttNetworkError(f"Whisper API network error: {e}") from e
         else:
-            raise SttError(f"Whisper API error: {e}")
+            raise SttError(f"Whisper API error: {e}") from e
 
 
 class SpeechToText:
